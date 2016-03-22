@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import keboola.bingads.ex.client.BulkResult;
 import keboola.bingads.ex.client.Client;
@@ -33,7 +34,7 @@ import keboola.bingads.ex.state.YamlStateWriter;
 public class Runner {
 
     public static void main(String[] args) {
-
+        LogManager.getLogManager().reset();
         if (args.length == 0) {
             System.out.print("No parameters provided.");
             System.exit(1);
@@ -98,6 +99,7 @@ public class Runner {
 
         LastState newState = new LastState(new HashMap(), new HashMap());
 
+        System.out.println("Downloading bulk data...");
         /*Download bulk data*/
         Calendar lastSync = null;
         for (Entry<String, Boolean> br : bulkReqestsToDownload.entrySet()) {
@@ -137,6 +139,7 @@ public class Runner {
 
         }
 
+        System.out.println("Downloading report queries...");
         /*Download reports */
         List<BReportRequest> repRequests = config.getParams().getReportRequests();
         lastSync = null;

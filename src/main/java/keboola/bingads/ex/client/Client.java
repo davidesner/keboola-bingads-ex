@@ -209,6 +209,7 @@ public class Client {
             downloadParameters.setOverwriteResultFile(true);
 
             // Submit the download request, and the results file will be downloaded to the specified local file.
+            System.out.println("Downloading bulk data: " + type);
             resultFile = BulkService.downloadFileAsync(
                     downloadParameters,
                     progress,
