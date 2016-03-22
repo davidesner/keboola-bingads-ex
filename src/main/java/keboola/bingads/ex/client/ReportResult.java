@@ -47,12 +47,12 @@ public class ReportResult implements ApiDownloadResult {
 
     @Override
     public Date getLastSync() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.lastSync;
     }
 
     @Override
     public File getResultFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.resultFile;
     }
 
     @Override

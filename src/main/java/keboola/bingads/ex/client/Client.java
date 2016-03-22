@@ -269,6 +269,7 @@ public class Client {
         if (resultFile != null) {
             try {
                 res = new ReportResult(resultFile, null);
+                System.out.println("Complete.");
             } catch (Exception ex) {
                 throw new ClientException("Error proccessing report query result: " + request.getReportName() + " " + ex);
             }
