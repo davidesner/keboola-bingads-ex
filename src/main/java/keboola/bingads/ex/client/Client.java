@@ -260,7 +260,7 @@ public class Client {
                     reportingDownloadParameters,
                     null).get();
         } catch (InterruptedException ex) {
-            throw new ClientException("Error downloading report: " + request.getReportName() + " " + ex);
+            throw new ClientException("Error downloading report: " + resultFileName + " " + ex);
         } catch (ExecutionException ex) {
             throw new ClientException("Error downloading report " + request.getReportName() + " " + ex.getCause().getMessage());
         }

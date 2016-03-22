@@ -59,13 +59,15 @@ public class Runner {
             System.err.println(ex.getMessage());
             System.exit(1);
         }
-
-        if (!config.validate()) {
-            System.out.println(config.getValidationError());
-            System.err.println(config.getValidationError());
-            System.exit(1);
+        try {
+            if (!config.validate()) {
+                System.out.println(config.getValidationError());
+                System.err.println(config.getValidationError());
+                System.exit(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
         //retrieve stateFile
         File stateFile = new File(dataPath + File.separator + "in" + File.separator + "state.yml");
         LastState lastState = null;
@@ -164,7 +166,7 @@ public class Runner {
             newState.getBulkRequests().put(repReq.getType().name(), rResult.getLastSync());
 
             //bulid manifest file
-            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), true, new String[]{"Id"}, ",", "");
+            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), true, repReq.getPkey(), ",", "");
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, rResult.getResultFile().getName());
             } catch (IOException ex) {

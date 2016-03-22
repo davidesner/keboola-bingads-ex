@@ -3,10 +3,16 @@
 package keboola.bingads.ex.client;
 
 import com.microsoft.bingads.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.reporting.AdExtensionByAdReportColumn;
+import com.microsoft.bingads.reporting.AdExtensionByAdReportRequest;
+import com.microsoft.bingads.reporting.AdExtensionByKeywordReportColumn;
+import com.microsoft.bingads.reporting.AdExtensionByKeywordReportRequest;
 import com.microsoft.bingads.reporting.AdExtensionDetailReportColumn;
 import com.microsoft.bingads.reporting.AdExtensionDetailReportRequest;
 import com.microsoft.bingads.reporting.AdPerformanceReportColumn;
 import com.microsoft.bingads.reporting.AdPerformanceReportRequest;
+import com.microsoft.bingads.reporting.ArrayOfAdExtensionByAdReportColumn;
+import com.microsoft.bingads.reporting.ArrayOfAdExtensionByKeywordReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfAdExtensionDetailReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfAdPerformanceReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfKeywordPerformanceReportColumn;
@@ -41,17 +47,18 @@ public class ReportRequestFactory {
 
             //build adExtension
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByAd) {
-                AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
-                reportReq.setAggregation(NonHourlyReportAggregation.valueOf(br.getAggregationPeriod()));
+                AdExtensionByAdReportRequest reportReq = new AdExtensionByAdReportRequest();
+                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
                 //set columns     
-                ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
+                ArrayOfAdExtensionByAdReportColumn columns = new ArrayOfAdExtensionByAdReportColumn();
                 if (br.getColumns() == null) {
-                    columns.getAdPerformanceReportColumns().addAll(Arrays.asList(AdPerformanceReportColumn.values()));
+                    columns.getAdExtensionByAdReportColumns().addAll(Arrays.asList(AdExtensionByAdReportColumn.values()));
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getAdPerformanceReportColumns().add(AdPerformanceReportColumn.fromValue(col));
+                        columns.getAdExtensionByAdReportColumns().add(AdExtensionByAdReportColumn.fromValue(col));
                     }
                 }
+                reportReq.setColumns(columns);
                 reportReq.setTime(time);
                 reportReq.setScope(sc);
 
@@ -59,15 +66,15 @@ public class ReportRequestFactory {
             }
             //build AdExtensionByKeyWord request
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByKeyWord) {
-                KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
+                AdExtensionByKeywordReportRequest reportReq = new AdExtensionByKeywordReportRequest();
                 reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
                 //set columns     
-                ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
+                ArrayOfAdExtensionByKeywordReportColumn columns = new ArrayOfAdExtensionByKeywordReportColumn();
                 if (br.getColumns() == null) {
-                    columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
+                    columns.getAdExtensionByKeywordReportColumns().addAll(Arrays.asList(AdExtensionByKeywordReportColumn.values()));
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));
+                        columns.getAdExtensionByKeywordReportColumns().add(AdExtensionByKeywordReportColumn.fromValue(col));
                     }
                 }
                 reportReq.setColumns(columns);
@@ -84,9 +91,11 @@ public class ReportRequestFactory {
                 ArrayOfAdExtensionDetailReportColumn columns = new ArrayOfAdExtensionDetailReportColumn();
                 if (br.getColumns() == null) {
                     columns.getAdExtensionDetailReportColumns().addAll(Arrays.asList(AdExtensionDetailReportColumn.values()));
+
                 } else {
                     for (String col : br.getColumns()) {
                         columns.getAdExtensionDetailReportColumns().add(AdExtensionDetailReportColumn.fromValue(col));
+
                     }
                 }
                 reportReq.setColumns(columns);
@@ -124,6 +133,7 @@ public class ReportRequestFactory {
                 ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
                 if (br.getColumns() == null) {
                     columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
+                    columns.getKeywordPerformanceReportColumns().remove(KeywordPerformanceReportColumn.KEYWORD_MATCH_TYPE_ID);
                 } else {
                     for (String col : br.getColumns()) {
                         columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));

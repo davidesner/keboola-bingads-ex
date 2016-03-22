@@ -105,7 +105,6 @@ public class ReportResult implements ApiDownloadResult {
         resultFile.delete();
 
         outFile.renameTo(resultFile);
-        resultFile = outFile;
 
     }
 
