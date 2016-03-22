@@ -226,6 +226,7 @@ public class Client {
             try {
                 result = new BulkResult(resultFile);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 throw new ClientException("Error processing bulk query result: " + type + " " + ex);
             }
         } else {
@@ -254,6 +255,7 @@ public class Client {
 
         File resultFile;
         try {
+            System.out.println("Downloading report data: " + request.getReportName());
             resultFile = rm.downloadFileAsync(
                     reportingDownloadParameters,
                     null).get();
