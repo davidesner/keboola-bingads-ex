@@ -1,0 +1,151 @@
+/*
+ */
+package keboola.bingads.ex.client;
+
+import com.microsoft.bingads.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.reporting.AdExtensionDetailReportColumn;
+import com.microsoft.bingads.reporting.AdExtensionDetailReportRequest;
+import com.microsoft.bingads.reporting.AdPerformanceReportColumn;
+import com.microsoft.bingads.reporting.AdPerformanceReportRequest;
+import com.microsoft.bingads.reporting.ArrayOfAdExtensionDetailReportColumn;
+import com.microsoft.bingads.reporting.ArrayOfAdPerformanceReportColumn;
+import com.microsoft.bingads.reporting.ArrayOfKeywordPerformanceReportColumn;
+import com.microsoft.bingads.reporting.Date;
+import com.microsoft.bingads.reporting.KeywordPerformanceReportColumn;
+import com.microsoft.bingads.reporting.KeywordPerformanceReportRequest;
+import com.microsoft.bingads.reporting.NonHourlyReportAggregation;
+import com.microsoft.bingads.reporting.ReportAggregation;
+import com.microsoft.bingads.reporting.ReportFormat;
+import com.microsoft.bingads.reporting.ReportRequest;
+import com.microsoft.bingads.reporting.ReportTime;
+import java.util.Arrays;
+
+import keboola.bingads.ex.config.pojos.BReportRequest;
+
+/**
+ *
+ * @author David Esner <esnerda at gmail.com>
+ * @created 2016
+ */
+public class ReportRequestFactory {
+
+    public static ReportRequest createReportRequest(BReportRequest br, long accountId, ReportTime time) throws ClientException {
+        ReportRequest request = null;
+
+        //setscope
+        try {
+            AccountThroughAdGroupReportScope sc = new AccountThroughAdGroupReportScope();
+            com.microsoft.bingads.reporting.ArrayOflong aIds = new com.microsoft.bingads.reporting.ArrayOflong();
+            aIds.getLongs().add(accountId);
+            sc.setAccountIds(aIds);
+
+            //build adExtension
+            if (br.getType() == BReportRequest.reportTypes.AdExtensionByAd) {
+                AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
+                reportReq.setAggregation(NonHourlyReportAggregation.valueOf(br.getAggregationPeriod()));
+                //set columns     
+                ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
+                if (br.getColumns() == null) {
+                    columns.getAdPerformanceReportColumns().addAll(Arrays.asList(AdPerformanceReportColumn.values()));
+                } else {
+                    for (String col : br.getColumns()) {
+                        columns.getAdPerformanceReportColumns().add(AdPerformanceReportColumn.fromValue(col));
+                    }
+                }
+                reportReq.setTime(time);
+                reportReq.setScope(sc);
+
+                request = reportReq;
+            }
+            //build AdExtensionByKeyWord request
+            if (br.getType() == BReportRequest.reportTypes.AdExtensionByKeyWord) {
+                KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
+                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                //set columns     
+                ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
+                if (br.getColumns() == null) {
+                    columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
+                } else {
+                    for (String col : br.getColumns()) {
+                        columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));
+                    }
+                }
+                reportReq.setColumns(columns);
+                reportReq.setTime(time);
+                reportReq.setScope(sc);
+
+                request = reportReq;
+            }
+            //build AdExtensionPerformanceDetail request
+            if (br.getType() == BReportRequest.reportTypes.AdExtensionPerformanceDetail) {
+                AdExtensionDetailReportRequest reportReq = new AdExtensionDetailReportRequest();
+                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                //set columns     
+                ArrayOfAdExtensionDetailReportColumn columns = new ArrayOfAdExtensionDetailReportColumn();
+                if (br.getColumns() == null) {
+                    columns.getAdExtensionDetailReportColumns().addAll(Arrays.asList(AdExtensionDetailReportColumn.values()));
+                } else {
+                    for (String col : br.getColumns()) {
+                        columns.getAdExtensionDetailReportColumns().add(AdExtensionDetailReportColumn.fromValue(col));
+                    }
+                }
+                reportReq.setColumns(columns);
+                reportReq.setTime(time);
+                reportReq.setScope(sc);
+
+                request = reportReq;
+            }
+
+            //build AdsPerformance request
+            if (br.getType() == BReportRequest.reportTypes.AdsPerformance) {
+                AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
+                reportReq.setAggregation(NonHourlyReportAggregation.valueOf(br.getAggregationPeriod()));
+                //set columns     
+                ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
+                if (br.getColumns() == null) {
+                    columns.getAdPerformanceReportColumns().addAll(Arrays.asList(AdPerformanceReportColumn.values()));
+                } else {
+                    for (String col : br.getColumns()) {
+                        columns.getAdPerformanceReportColumns().add(AdPerformanceReportColumn.fromValue(col));
+                    }
+                }
+                reportReq.setColumns(columns);
+                reportReq.setTime(time);
+                reportReq.setScope(sc);
+
+                request = reportReq;
+            }
+
+            //build KeywordPerformance request
+            if (br.getType() == BReportRequest.reportTypes.KeywordPerformance) {
+                KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
+                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                //set columns     
+                ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
+                if (br.getColumns() == null) {
+                    columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
+                } else {
+                    for (String col : br.getColumns()) {
+                        columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));
+                    }
+                }
+                reportReq.setColumns(columns);
+                reportReq.setTime(time);
+                reportReq.setScope(sc);
+
+                request = reportReq;
+            }
+        } catch (Exception ex) {
+            throw new ClientException("Unable to proccess request " + br.getType().name() + " " + ex.getMessage());
+        }
+
+        if (request == null) {
+            throw new ClientException(br.getType().name() + " report type is not supported");
+        }
+
+        request.setReturnOnlyCompleteData(true);
+        request.setFormat(ReportFormat.CSV);
+        return request;
+    }
+
+}
