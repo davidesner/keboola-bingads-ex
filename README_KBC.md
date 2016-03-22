@@ -1,1 +1,1 @@
-
+## BingAds extractor
