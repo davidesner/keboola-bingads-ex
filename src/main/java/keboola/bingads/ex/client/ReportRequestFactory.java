@@ -153,7 +153,7 @@ public class ReportRequestFactory {
             throw new ClientException(br.getType().name() + " report type is not supported");
         }
 
-        request.setReturnOnlyCompleteData(true);
+        request.setReturnOnlyCompleteData(br.isCompleteData());
         request.setFormat(ReportFormat.CSV);
         return request;
     }

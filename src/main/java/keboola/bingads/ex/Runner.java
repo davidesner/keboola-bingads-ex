@@ -112,7 +112,10 @@ public class Runner {
             //last run
             if (lastBulkRequests != null && config.getParams().getSinceLast()) {
                 lastSync = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                lastSync.setTime(lastBulkRequests.get(br.getKey()));
+                Date dt = lastBulkRequests.get(br.getKey());
+                if (dt != null) {
+                    lastSync.setTime(dt);
+                }
             }
             boolean qScore = false;
             if (br.getKey().equals("CAMPAIGNS")) {

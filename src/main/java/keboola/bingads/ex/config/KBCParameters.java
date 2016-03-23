@@ -59,7 +59,7 @@ public class KBCParameters {
         this.devKey = devKey;
         this.accountId = accountId;
         this.customerId = customerId;
-        if (sinceLast = null) {
+        if (sinceLast == null) {
             this.sinceLast = true;
         } else {
             this.sinceLast = sinceLast;

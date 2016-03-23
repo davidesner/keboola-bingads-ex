@@ -41,9 +41,11 @@ public class BReportRequest {
 //required if incremental = 1
     private final String[] pkey;
 
+    private boolean completeData;
+
     public BReportRequest(@JsonProperty("type") String type, @JsonProperty("startDate") String startDate, @JsonProperty("aggregationPeriod") String aggregationPeriod,
             @JsonProperty("incremental") Integer incremental, @JsonProperty("columns") String[] columns,
-            @JsonProperty("reportPeriod") String reportPeriod, @JsonProperty("pkey") String[] pkey) throws ParseException {
+            @JsonProperty("reportPeriod") String reportPeriod, @JsonProperty("pkey") String[] pkey, @JsonProperty("completeData") Boolean completeData) throws ParseException {
 
         if (incremental != null) {
             this.incremental = incremental;
@@ -54,6 +56,11 @@ public class BReportRequest {
         this.columns = columns;
         this.type = type;
         this.reportPeriod = reportPeriod;
+        if (completeData == null) {
+            this.completeData = false;
+        } else {
+            this.completeData = true;
+        }
         if (aggregationPeriod == null) {
             this.aggregationPeriod = "DAILY";
         } else {
@@ -122,6 +129,10 @@ public class BReportRequest {
 
     public String getReportPeriod() {
         return reportPeriod;
+    }
+
+    public boolean isCompleteData() {
+        return completeData;
     }
 
     private void setDate_from(String dateString) throws ParseException {
