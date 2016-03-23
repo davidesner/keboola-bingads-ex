@@ -5,70 +5,29 @@ package keboola.bingads.ex.client;
 import com.microsoft.bingads.AuthorizationData;
 import com.microsoft.bingads.OAuthDesktopMobileAuthCodeGrant;
 import com.microsoft.bingads.OAuthTokens;
-import com.microsoft.bingads.ServiceClient;
-import com.microsoft.bingads.customermanagement.Account;
 
-import com.microsoft.bingads.customermanagement.AdApiFaultDetail_Exception;
-import com.microsoft.bingads.customermanagement.ApiFault_Exception;
-import com.microsoft.bingads.customermanagement.ArrayOfAccount;
-import com.microsoft.bingads.customermanagement.ArrayOfPredicate;
-
-import com.microsoft.bingads.customermanagement.GetUserRequest;
-import com.microsoft.bingads.customermanagement.ICustomerManagementService;
-import com.microsoft.bingads.customermanagement.Paging;
-import com.microsoft.bingads.customermanagement.Predicate;
-import com.microsoft.bingads.customermanagement.PredicateOperator;
-import com.microsoft.bingads.customermanagement.SearchAccountsRequest;
-import com.microsoft.bingads.customermanagement.User;
-import com.microsoft.bingads.reporting.AccountThroughAdGroupReportScope;
-import com.microsoft.bingads.reporting.AccountThroughCampaignReportScope;
-import com.microsoft.bingads.reporting.AdExtensionByAdReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionByAdReportRequest;
-import com.microsoft.bingads.reporting.AdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionByKeywordReportRequest;
-import com.microsoft.bingads.reporting.AdExtensionDetailReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionDetailReportRequest;
-import com.microsoft.bingads.reporting.AdPerformanceReportColumn;
-import com.microsoft.bingads.reporting.AdPerformanceReportRequest;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionByAdReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionDetailReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdPerformanceReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfKeywordPerformanceReportColumn;
+import com.microsoft.bingads.reporting.AdApiError;
+import com.microsoft.bingads.reporting.AdApiFaultDetail_Exception;
+import com.microsoft.bingads.reporting.ApiFaultDetail_Exception;
+import com.microsoft.bingads.reporting.BatchError;
 import com.microsoft.bingads.reporting.Date;
-import com.microsoft.bingads.reporting.KeywordPerformanceReportColumn;
-import com.microsoft.bingads.reporting.KeywordPerformanceReportRequest;
-import com.microsoft.bingads.reporting.NonHourlyReportAggregation;
-import com.microsoft.bingads.reporting.ReportAggregation;
-import com.microsoft.bingads.reporting.ReportFormat;
+import com.microsoft.bingads.reporting.OperationError;
 import com.microsoft.bingads.reporting.ReportRequest;
 import com.microsoft.bingads.reporting.ReportTime;
 import com.microsoft.bingads.reporting.ReportingDownloadParameters;
 import com.microsoft.bingads.reporting.ReportingServiceManager;
-import com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception;
-import com.microsoft.bingads.v10.bulk.ArrayOflong;
+
 import com.microsoft.bingads.v10.bulk.BulkDownloadEntity;
 import com.microsoft.bingads.v10.bulk.BulkOperationProgressInfo;
 import com.microsoft.bingads.v10.bulk.BulkServiceManager;
 import com.microsoft.bingads.v10.bulk.DataScope;
-import com.microsoft.bingads.v10.bulk.DownloadCampaignsByAccountIdsRequest;
-import com.microsoft.bingads.v10.bulk.DownloadCampaignsByAccountIdsResponse;
 import com.microsoft.bingads.v10.bulk.DownloadFileType;
 import com.microsoft.bingads.v10.bulk.DownloadParameters;
-import com.microsoft.bingads.v10.bulk.IBulkService;
-import com.microsoft.bingads.v10.bulk.PerformanceStatsDateRange;
 import com.microsoft.bingads.v10.bulk.Progress;
-import com.microsoft.bingads.v10.bulk.ReportTimePeriod;
 import java.io.File;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import keboola.bingads.ex.config.pojos.BReportRequest;
 
 /**
@@ -226,8 +185,34 @@ public class Client {
             try {
                 result = new BulkResult(resultFile);
             } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new ClientException("Error processing bulk query result: " + type + " " + ex);
+                String message = "";
+                Throwable cause = ex.getCause();
+                if (cause instanceof com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) {
+                    com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) cause;
+                    message += "The operation failed with the following faults:\n";
+
+                    for (com.microsoft.bingads.v10.bulk.AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
+                        message += "AdApiError\n";
+                        message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
+                                error.getCode(), error.getErrorCode(), error.getMessage());
+                    }
+                } else if (cause instanceof com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) {
+                    com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) cause;
+                    message += "The operation failed with the following faults:\n";
+
+                    for (com.microsoft.bingads.v10.bulk.BatchError error : ee.getFaultInfo().getBatchErrors().getBatchErrors()) {
+                        message += String.format("BatchError at Index: %d\n", error.getIndex());
+                        message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                    }
+
+                    for (com.microsoft.bingads.v10.bulk.OperationError error : ee.getFaultInfo().getOperationErrors().getOperationErrors()) {
+                        message += "OperationError\n";
+                        message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                    }
+                } else {
+                    message += ex.getMessage();
+                }
+                throw new ClientException("Error downloading report " + message);
             }
         } else {
             result = null;
@@ -255,14 +240,41 @@ public class Client {
 
         File resultFile;
         try {
-            System.out.println("Downloading report data: " + request.getReportName());
+            System.out.println("Downloading report data: " + resultFileName);
             resultFile = rm.downloadFileAsync(
                     reportingDownloadParameters,
                     null).get();
         } catch (InterruptedException ex) {
             throw new ClientException("Error downloading report: " + resultFileName + " " + ex);
         } catch (ExecutionException ex) {
-            throw new ClientException("Error downloading report " + request.getReportName() + " " + ex.getCause().getMessage());
+            String message = "";
+            Throwable cause = ex.getCause();
+            if (cause instanceof AdApiFaultDetail_Exception) {
+                AdApiFaultDetail_Exception ee = (AdApiFaultDetail_Exception) cause;
+                message += "The operation failed with the following faults:\n";
+
+                for (AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
+                    message += "AdApiError\n";
+                    message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
+                            error.getCode(), error.getErrorCode(), error.getMessage());
+                }
+            } else if (cause instanceof ApiFaultDetail_Exception) {
+                ApiFaultDetail_Exception ee = (ApiFaultDetail_Exception) cause;
+                message += "The operation failed with the following faults:\n";
+
+                for (BatchError error : ee.getFaultInfo().getBatchErrors().getBatchErrors()) {
+                    message += String.format("BatchError at Index: %d\n", error.getIndex());
+                    message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                }
+
+                for (OperationError error : ee.getFaultInfo().getOperationErrors().getOperationErrors()) {
+                    message += "OperationError\n";
+                    message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                }
+            } else {
+                message += ex.getMessage();
+            }
+            throw new ClientException("Error downloading report " + message);
         }
 
         ReportResult res = null;
