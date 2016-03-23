@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -109,13 +110,16 @@ public class Runner {
                 continue;
             }
             //last run
-            if (lastBulkRequests != null) {
-                lastSync = Calendar.getInstance();
+            if (lastBulkRequests != null && config.getParams().getSinceLast()) {
+                lastSync = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 lastSync.setTime(lastBulkRequests.get(br.getKey()));
             }
             boolean qScore = false;
             if (br.getKey().equals("CAMPAIGNS")) {
                 qScore = config.getParams().getBulkRequests().getCampQualityScore();
+                if (qScore) {
+                    lastSync = null;
+                }
             }
             BulkResult res = null;
             try {
@@ -130,7 +134,7 @@ public class Runner {
             newState.getBulkRequests().put(br.getKey(), res.getLastSync());
 
             //bulid manifest file
-            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + br.getKey().toLowerCase(), true, new String[]{"Id"}, ",", "");
+            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + br.getKey().toLowerCase(), true, new String[]{"Id"}, ",", "\"");
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, res.getResultFile().getName());
             } catch (IOException ex) {
@@ -147,9 +151,12 @@ public class Runner {
         lastSync = null;
         for (BReportRequest repReq : repRequests) {
 
-            if (lastReportRequests != null) {
+            if (lastReportRequests != null && config.getParams().getSinceLast()) {
                 lastSync = Calendar.getInstance();
-                lastSync.setTime(lastReportRequests.get(repReq.getType().name()));
+                Date dt = lastReportRequests.get(repReq.getType().name());
+                if (dt != null) {
+                    lastSync.setTime(dt);
+                }
             }
 
             ReportResult rResult = null;
@@ -163,10 +170,10 @@ public class Runner {
             }
 
             //set new state
-            newState.getBulkRequests().put(repReq.getType().name(), rResult.getLastSync());
+            newState.getReportRequests().put(repReq.getType().name(), rResult.getLastSync());
 
             //bulid manifest file
-            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), true, repReq.getPkey(), ",", "");
+            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), true, repReq.getPkey(), ",", "\"");
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, rResult.getResultFile().getName());
             } catch (IOException ex) {

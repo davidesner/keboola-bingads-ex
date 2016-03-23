@@ -36,6 +36,8 @@ public class KBCParameters {
     //start date of fetched interval in format: 05-10-2015 21:00
     @JsonProperty("dateFrom")
     private String dateFrom;
+    @JsonProperty("sinceLast")
+    private Boolean sinceLast;
     @JsonProperty("bucket")
     private String bucket;
     @JsonProperty("bulkRequests")
@@ -50,13 +52,19 @@ public class KBCParameters {
 
     @JsonCreator
     public KBCParameters(@JsonProperty("#devKey") String devKey, @JsonProperty("accountId") Long accountId, @JsonProperty("customerId") Long customerId,
-            @JsonProperty("dateTo") String dateTo, @JsonProperty("dateFrom") String dateFrom, @JsonProperty("bucket") String bucket,
+            @JsonProperty("dateTo") String dateTo, @JsonProperty("sinceLast") Boolean sinceLast, @JsonProperty("dateFrom") String dateFrom, @JsonProperty("bucket") String bucket,
             @JsonProperty("bulkRequests") BulkRequests bulkRequests, @JsonProperty("reportRequests") List<BReportRequest> reportRequests
     ) throws ParseException {
         parametersMap = new HashMap<>();
         this.devKey = devKey;
         this.accountId = accountId;
         this.customerId = customerId;
+        if (sinceLast = null) {
+            this.sinceLast = true;
+        } else {
+            this.sinceLast = sinceLast;
+        }
+
         if (dateFrom != null) {
             setDate_from(dateFrom);
         }
@@ -111,6 +119,10 @@ public class KBCParameters {
 
     public Map<String, Object> getParametersMap() {
         return parametersMap;
+    }
+
+    public Boolean getSinceLast() {
+        return sinceLast;
     }
 
     public String getBucket() {

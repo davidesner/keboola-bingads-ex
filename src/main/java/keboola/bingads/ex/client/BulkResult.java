@@ -78,7 +78,7 @@ public class BulkResult implements ApiDownloadResult {
 
     private void setLastSync(String dateString) throws ParseException {
 
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         this.lastSync = format.parse(dateString);
     }
 

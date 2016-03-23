@@ -177,7 +177,34 @@ public class Client {
         } catch (InterruptedException ex) {
             throw new ClientException("Error downloading bulk data: " + type + " " + ex);
         } catch (ExecutionException ex) {
-            throw new ClientException("Error downloading bulk data: " + type + " " + ex.getCause().getMessage());
+            String message = "";
+            Throwable cause = ex.getCause();
+            if (cause instanceof com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) {
+                com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) cause;
+                message += "The operation failed with the following faults:\n";
+
+                for (com.microsoft.bingads.v10.bulk.AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
+                    message += "AdApiError\n";
+                    message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
+                            error.getCode(), error.getErrorCode(), error.getMessage());
+                }
+            } else if (cause instanceof com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) {
+                com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) cause;
+                message += "The operation failed with the following faults:\n";
+
+                for (com.microsoft.bingads.v10.bulk.BatchError error : ee.getFaultInfo().getBatchErrors().getBatchErrors()) {
+                    message += String.format("BatchError at Index: %d\n", error.getIndex());
+                    message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                }
+
+                for (com.microsoft.bingads.v10.bulk.OperationError error : ee.getFaultInfo().getOperationErrors().getOperationErrors()) {
+                    message += "OperationError\n";
+                    message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+                }
+            } else {
+                message += ex.getMessage();
+            }
+            throw new ClientException("Error downloading report " + message);
 
         }
         BulkResult result;
@@ -185,34 +212,7 @@ public class Client {
             try {
                 result = new BulkResult(resultFile);
             } catch (Exception ex) {
-                String message = "";
-                Throwable cause = ex.getCause();
-                if (cause instanceof com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) {
-                    com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) cause;
-                    message += "The operation failed with the following faults:\n";
-
-                    for (com.microsoft.bingads.v10.bulk.AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
-                        message += "AdApiError\n";
-                        message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
-                                error.getCode(), error.getErrorCode(), error.getMessage());
-                    }
-                } else if (cause instanceof com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) {
-                    com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.ApiFaultDetail_Exception) cause;
-                    message += "The operation failed with the following faults:\n";
-
-                    for (com.microsoft.bingads.v10.bulk.BatchError error : ee.getFaultInfo().getBatchErrors().getBatchErrors()) {
-                        message += String.format("BatchError at Index: %d\n", error.getIndex());
-                        message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
-                    }
-
-                    for (com.microsoft.bingads.v10.bulk.OperationError error : ee.getFaultInfo().getOperationErrors().getOperationErrors()) {
-                        message += "OperationError\n";
-                        message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
-                    }
-                } else {
-                    message += ex.getMessage();
-                }
-                throw new ClientException("Error downloading report " + message);
+                throw new ClientException("Error proccessing report query result: " + type + " " + ex.getMessage());
             }
         } else {
             result = null;

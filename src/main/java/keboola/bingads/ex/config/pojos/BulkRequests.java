@@ -19,6 +19,8 @@ public class BulkRequests {
 
     @JsonProperty("ads")
     private Boolean ads;
+    @JsonProperty("adGroups")
+    private Boolean adGroups;
     @JsonProperty("campaigns")
     private Boolean campaigns;
     @JsonProperty("campQualityScore")
@@ -29,11 +31,12 @@ public class BulkRequests {
     private Boolean siteLinkAddExtensions;
 
     @JsonCreator
-    public BulkRequests(@JsonProperty("ads") Boolean ads, @JsonProperty("campaigns") Boolean campaigns, @JsonProperty("campQualityScore") Boolean campQualityScore,
+    public BulkRequests(@JsonProperty("ads") Boolean ads, @JsonProperty("adGroups") Boolean adGroups, @JsonProperty("campaigns") Boolean campaigns, @JsonProperty("campQualityScore") Boolean campQualityScore,
             @JsonProperty("keywords") Boolean keywords, @JsonProperty("siteLinkAddExtensions") Boolean siteLinkAddExtensions) {
         this.bulkFiles = new HashMap();
 
         this.ads = ads;
+        this.adGroups = adGroups;
 
         this.campaigns = campaigns;
         if (campQualityScore == null) {
@@ -46,6 +49,7 @@ public class BulkRequests {
 
         this.bulkFiles.put("CAMPAIGNS", campaigns);
         this.bulkFiles.put("ADS", ads);
+        this.bulkFiles.put("AD_GROUPS", adGroups);
         this.bulkFiles.put("KEYWORDS", keywords);
         this.bulkFiles.put("SITE_LINKS_AD_EXTENSIONS", keywords);
 
@@ -61,6 +65,9 @@ public class BulkRequests {
         if (ads == null) {
             message += "ads parameter is missing! ";
         }
+        if (adGroups == null) {
+            message += "adGroups parameter is missing! ";
+        }
         if (campaigns == null) {
             message += " campaigns parameter is missing! ";
         }
@@ -75,6 +82,10 @@ public class BulkRequests {
             throw new ValidationException(message);
         }
         return true;
+    }
+
+    public Boolean getAdGroups() {
+        return adGroups;
     }
 
     public Boolean getAds() {
