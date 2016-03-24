@@ -16,8 +16,7 @@ The component currently allows to retrieve these data sets:
 - **keywords** 
 
 The Reporting Service provides performance data (facts) on
-specified level of aggregation. Currently supported datasets and
-their column lists :
+specified level of aggregation. Currently supported datasets and their column lists :
 
 - **AdsPerformance**	*[[AdPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adperformancereportcolumn(v=msads.90).aspx)]*
 - **KeywordPerformance**	 *[[KeywordPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-keywordperformancereportcolumn(v=msads.90).aspx)]*
@@ -25,7 +24,7 @@ their column lists :
 - **AdExtensionByKeyWord**	*[[AdExtensionByKeywordReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbykeywordreportcolumn(v=msads.90).aspx)]* 
 - **AdExtensionByAd**	*[[AdExtensionByAdReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbyadreportcolumn(v=msads.90).aspx)]*
 
-For each report user can specify aggregation level, report period and column set to be retrieved. By defalut the aggregation level is *DAILY* and all columns are retrieved.
+For each report user can specify aggregation level, report period and column set to be retrieved. By default the aggregation level is *DAILY* and all columns are retrieved.
 
 ## Configuration
 
