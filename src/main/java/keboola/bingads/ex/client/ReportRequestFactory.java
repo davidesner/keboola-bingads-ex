@@ -48,7 +48,7 @@ public class ReportRequestFactory {
             //build adExtension
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByAd) {
                 AdExtensionByAdReportRequest reportReq = new AdExtensionByAdReportRequest();
-                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //set columns     
                 ArrayOfAdExtensionByAdReportColumn columns = new ArrayOfAdExtensionByAdReportColumn();
                 if (br.getColumns() == null) {
@@ -67,7 +67,7 @@ public class ReportRequestFactory {
             //build AdExtensionByKeyWord request
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByKeyWord) {
                 AdExtensionByKeywordReportRequest reportReq = new AdExtensionByKeywordReportRequest();
-                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //set columns     
                 ArrayOfAdExtensionByKeywordReportColumn columns = new ArrayOfAdExtensionByKeywordReportColumn();
                 if (br.getColumns() == null) {
@@ -83,10 +83,10 @@ public class ReportRequestFactory {
 
                 request = reportReq;
             }
-            //build AdExtensionPerformanceDetail request
-            if (br.getType() == BReportRequest.reportTypes.AdExtensionPerformanceDetail) {
+            //build AdExtensionDetail request
+            if (br.getType() == BReportRequest.reportTypes.AdExtensionDetail) {
                 AdExtensionDetailReportRequest reportReq = new AdExtensionDetailReportRequest();
-                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //set columns     
                 ArrayOfAdExtensionDetailReportColumn columns = new ArrayOfAdExtensionDetailReportColumn();
                 if (br.getColumns() == null) {
@@ -108,7 +108,7 @@ public class ReportRequestFactory {
             //build AdsPerformance request
             if (br.getType() == BReportRequest.reportTypes.AdsPerformance) {
                 AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
-                reportReq.setAggregation(NonHourlyReportAggregation.valueOf(br.getAggregationPeriod()));
+                reportReq.setAggregation(NonHourlyReportAggregation.fromValue(br.getAggregationPeriod()));
                 //set columns     
                 ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
                 if (br.getColumns() == null) {
@@ -128,7 +128,7 @@ public class ReportRequestFactory {
             //build KeywordPerformance request
             if (br.getType() == BReportRequest.reportTypes.KeywordPerformance) {
                 KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
-                reportReq.setAggregation(ReportAggregation.valueOf(br.getAggregationPeriod()));
+                reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //set columns     
                 ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
                 if (br.getColumns() == null) {

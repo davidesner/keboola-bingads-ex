@@ -98,7 +98,7 @@ public class Client {
             time.setCustomDateRangeStart(startDate);
             time.setCustomDateRangeEnd(endDate);
         } else {
-            time.setPredefinedTime(com.microsoft.bingads.reporting.ReportTimePeriod.valueOf(request.getReportPeriod()));
+            time.setPredefinedTime(com.microsoft.bingads.reporting.ReportTimePeriod.fromValue(request.getReportPeriod()));
         }
 
         ReportRequest r = ReportRequestFactory.createReportRequest(request, authorizationData.getAccountId(), time);

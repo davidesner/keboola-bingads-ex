@@ -176,7 +176,7 @@ public class Runner {
             newState.getReportRequests().put(repReq.getType().name(), rResult.getLastSync());
 
             //bulid manifest file
-            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), true, repReq.getPkey(), ",", "\"");
+            ManifestFile man = new ManifestFile(config.getParams().getBucket() + "." + repReq.getType().name(), repReq.getIncremental(), repReq.getPkey(), ",", "\"");
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, rResult.getResultFile().getName());
             } catch (IOException ex) {

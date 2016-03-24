@@ -21,12 +21,12 @@ public class BReportRequest {
     public enum reportTypes {
         AdsPerformance,
         KeywordPerformance,
-        AdExtensionPerformanceDetail,
+        AdExtensionDetail,
         AdExtensionByKeyWord,
         AdExtensionByAd
     }
     private final String type;
-    //start date of fetched interval in format: 05-10-2015 21:00
+    //start date of fetched interval in format: 05-10-2015
     private String startDate;
     private Date date_from;
 
@@ -37,20 +37,20 @@ public class BReportRequest {
     private final String reportPeriod;
 
 //default 1
-    private final Integer incremental;
+    private final Boolean incremental;
 //required if incremental = 1
     private final String[] pkey;
 
     private boolean completeData;
 
     public BReportRequest(@JsonProperty("type") String type, @JsonProperty("startDate") String startDate, @JsonProperty("aggregationPeriod") String aggregationPeriod,
-            @JsonProperty("incremental") Integer incremental, @JsonProperty("columns") String[] columns,
+            @JsonProperty("incremental") Boolean incremental, @JsonProperty("columns") String[] columns,
             @JsonProperty("reportPeriod") String reportPeriod, @JsonProperty("pkey") String[] pkey, @JsonProperty("completeData") Boolean completeData) throws ParseException {
 
         if (incremental != null) {
             this.incremental = incremental;
         } else {
-            this.incremental = 0;
+            this.incremental = false;
         }
         this.pkey = pkey;
         this.columns = columns;
@@ -62,7 +62,7 @@ public class BReportRequest {
             this.completeData = true;
         }
         if (aggregationPeriod == null) {
-            this.aggregationPeriod = "DAILY";
+            this.aggregationPeriod = "Daily";
         } else {
             this.aggregationPeriod = aggregationPeriod;
         }
@@ -90,7 +90,7 @@ public class BReportRequest {
         if (!isValidAggregation(aggregationPeriod)) {
             message += " Parameter aggregationPeriod: '" + aggregationPeriod + "' is invalid, check for supported types! ";
         }
-        if (incremental == 1 && pkey == null) {
+        if (incremental && pkey == null) {
             message += "pKey parameter has to be set for incremental import! ";
         }
 
@@ -111,7 +111,7 @@ public class BReportRequest {
 
     private boolean isValidAggregation(String type) {
         try {
-            ReportAggregation a = ReportAggregation.valueOf(type);
+            ReportAggregation a = ReportAggregation.fromValue(type);
             return a != null;
         } catch (Exception ex) {
             return false;
@@ -120,7 +120,7 @@ public class BReportRequest {
 
     private boolean isValidPeriod(String type) {
         try {
-            ReportTimePeriod a = ReportTimePeriod.valueOf(type);
+            ReportTimePeriod a = ReportTimePeriod.fromValue(type);
             return a != null;
         } catch (Exception ex) {
             return false;
@@ -136,7 +136,7 @@ public class BReportRequest {
     }
 
     private void setDate_from(String dateString) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         this.date_from = format.parse(dateString);
 
     }
@@ -145,7 +145,7 @@ public class BReportRequest {
         return date_from;
     }
 
-    public Integer getIncremental() {
+    public Boolean getIncremental() {
         return incremental;
     }
 
