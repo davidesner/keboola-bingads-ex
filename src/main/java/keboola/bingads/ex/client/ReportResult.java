@@ -113,13 +113,15 @@ public class ReportResult implements ApiDownloadResult {
         try {
             f = new RandomAccessFile(resultFile, "rw");
             long length = 0;
+            long lastLength = 0;
             //read lines from the end until the line with correct number of columns            
             do {
+                lastLength = f.getFilePointer();
                 currLine = readLineWithNLBackWards(f);
                 length = f.getFilePointer();
             } while (headerLength != CsvUtils.getCsvColumnLength(new String(currLine), ",".charAt(0), "\"".charAt(0)));
 
-            f.setLength(length + currLine.length + 1);
+            f.setLength(lastLength);
             f.close();
         } catch (FileNotFoundException ex) {
             throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
