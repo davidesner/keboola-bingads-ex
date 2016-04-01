@@ -49,7 +49,7 @@ public class ReportResult implements ApiDownloadResult {
     }
 
     @Override
-    public void cleanupCSV() {
+    public void cleanupCSV() throws ResultException {
 
         BufferedReader reader = null;
         String line = "";
@@ -122,16 +122,16 @@ public class ReportResult implements ApiDownloadResult {
             f.setLength(length + currLine.length + 1);
             f.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
         } catch (IOException ex) {
-            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
         } catch (Exception ex) {
-            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
         }
 
     }
 
-    private char[] readLineWithNL(FileInputStream in) {
+    private char[] readLineWithNL(FileInputStream in) throws IOException {
         try {
             int hLen = 0;
 
@@ -161,8 +161,8 @@ public class ReportResult implements ApiDownloadResult {
             }
             return charArray;//in.getChannel().position() - 1;
         } catch (IOException ex) {
-            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw ex;
+
         }
     }
 

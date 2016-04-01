@@ -18,6 +18,7 @@ import keboola.bingads.ex.client.BulkResult;
 import keboola.bingads.ex.client.Client;
 import keboola.bingads.ex.client.ClientException;
 import keboola.bingads.ex.client.ReportResult;
+import keboola.bingads.ex.client.ResultException;
 import keboola.bingads.ex.config.KBCConfig;
 import keboola.bingads.ex.config.YamlConfigParser;
 import keboola.bingads.ex.config.pojos.BReportRequest;
@@ -167,6 +168,10 @@ public class Runner {
             try {
                 rResult = cl.downloadReport(repReq, outTablesPath, lastSync);
             } catch (ClientException ex) {
+                System.out.println(ex.getMessage());
+                System.err.println(ex.getMessage());
+                System.exit(ex.getSeverity());
+            } catch (ResultException ex) {
                 System.out.println(ex.getMessage());
                 System.err.println(ex.getMessage());
                 System.exit(ex.getSeverity());

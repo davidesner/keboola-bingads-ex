@@ -73,7 +73,7 @@ public class Client {
      * @return
      * @throws ClientException
      */
-    public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync) throws ClientException {
+    public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync) throws ClientException, ResultException {
 
         Date startDate = new Date();
         Date endDate = new Date();
@@ -228,7 +228,7 @@ public class Client {
      * @return
      * @throws ClientException
      */
-    public ReportResult performReportRequest(ReportRequest request, String resultFolderPath, String resultFileName) throws ClientException {
+    public ReportResult performReportRequest(ReportRequest request, String resultFolderPath, String resultFileName) throws ClientException, ResultException {
         OAuthTokens tokens = oAuthCodeGrant.refreshTokensIfNeeded(true);
         ReportingServiceManager rm = new ReportingServiceManager(authorizationData);
 
@@ -282,6 +282,8 @@ public class Client {
             try {
                 res = new ReportResult(resultFile, null);
                 System.out.println("Complete.");
+            } catch (ResultException rx) {
+                throw rx;
             } catch (Exception ex) {
                 throw new ClientException("Error proccessing report query result: " + request.getReportName() + " " + ex);
             }

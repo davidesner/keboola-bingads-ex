@@ -16,6 +16,6 @@ public interface ApiDownloadResult {
 
     public File getResultFile();
 
-    public void cleanupCSV();
+    public void cleanupCSV() throws ResultException;
 
 }
