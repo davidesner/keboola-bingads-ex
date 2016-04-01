@@ -8,11 +8,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import keboola.bingads.ex.utils.CsvUtils;
 
 /**
  *
@@ -92,10 +94,40 @@ public class ReportResult implements ApiDownloadResult {
             } catch (IOException ex) {
             }
         }
-        String fname = resultFile.getName();
+
         resultFile.delete();
 
         outFile.renameTo(resultFile);
+
+        /*Truncate copyright notice and empty lines at the end of the file*/
+        char[] currLine = null;
+        int headerLength = 0;
+
+        try {
+            headerLength = CsvUtils.getHeaderLength(resultFile, ",".charAt(0), "\"".charAt(0));
+        } catch (Exception ex) {
+            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        RandomAccessFile f;
+        try {
+            f = new RandomAccessFile(resultFile, "rw");
+            long length = 0;
+            //read lines from the end until the line with correct number of columns            
+            do {
+                currLine = readLineWithNLBackWards(f);
+                length = f.getFilePointer();
+            } while (headerLength != CsvUtils.getCsvColumnLength(new String(currLine), ",".charAt(0), "\"".charAt(0)));
+
+            f.setLength(length + currLine.length + 1);
+            f.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -106,11 +138,13 @@ public class ReportResult implements ApiDownloadResult {
             ArrayList<Character> chars = new ArrayList();
             int ch = in.read();
             chars.add((char) ch);
+            //continue until NL character
             while (!isNL(ch)) {
                 ch = in.read();
                 chars.add((char) ch);
             }
             boolean isNl = true;
+            //skip other remaining NL chars until the start of next line
             while (isNl) {
                 ch = in.read();
                 if (isNL(ch)) {
@@ -130,6 +164,58 @@ public class ReportResult implements ApiDownloadResult {
             Logger.getLogger(ReportResult.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    /**
+     * Reads line backwards from the end of a file including new line
+     * characters. Sets the file pointer of RandomAccessFile object
+     *
+     * @param f - RandomAccessFile object
+     * @return
+     */
+    private char[] readLineWithNLBackWards(RandomAccessFile f) throws IOException {
+
+        long length = f.length() - 1;
+        byte b;
+        //set to current pointer if not at the end
+        if (f.getFilePointer() < length && f.getFilePointer() > 0) {
+            length = f.getFilePointer() - 1;
+        }
+
+        ArrayList<Character> chars = new ArrayList();
+        f.seek(length);
+        int ch = f.read();
+        length--;
+
+        chars.add((char) ch);
+        //continue until NL character
+        while (!isNL(ch)) {
+            f.seek(length);
+            ch = f.read();
+            chars.add((char) ch);
+            length--;
+        }
+        //reached new line
+        boolean isNl = true;
+        //skip other remaining NL chars until the start of next line
+        while (isNl) {
+            f.seek(length);
+            ch = f.read();
+            if (isNL(ch)) {
+                chars.add((char) ch);
+                isNl = true;
+            } else {
+                isNl = false;
+            }
+            length--;
+
+        }
+        char[] charArray = new char[chars.size()];
+        for (int i = 0; i < chars.size(); i++) {
+            charArray[i] = chars.get(i);
+        }
+        return charArray;//in.getChannel().position() - 1;
+
     }
 
     private boolean isNL(int character) {
