@@ -35,6 +35,7 @@ Firstly, you need to apply for a Developer Token to be able to access the API.
 See [bing-ads-getting-started](https://msdn.microsoft.com/en-us/library/bing-ads-getting-started.aspx)
 
 Then you can authorize with your Microsoft account to retrieve Refresh tokens. This can be done simply by clicking  *Authorize Account* button in component's configuration.
+![](https://raw.githubusercontent.com/davidesner/keboola-bingads-ex/master/img/screen.png)
 
 ### Parameters
 
