@@ -21,13 +21,13 @@ import keboola.bingads.ex.client.ReportResult;
 import keboola.bingads.ex.client.ResultException;
 import keboola.bingads.ex.config.KBCConfig;
 import keboola.bingads.ex.config.KBCParameters;
-import keboola.bingads.ex.config.YamlConfigParser;
+import keboola.bingads.ex.config.JsonConfigParser;
 import keboola.bingads.ex.config.pojos.BReportRequest;
 import keboola.bingads.ex.config.pojos.BulkRequests;
 import keboola.bingads.ex.config.tableconfig.ManifestBuilder;
 import keboola.bingads.ex.config.tableconfig.ManifestFile;
 import keboola.bingads.ex.state.LastState;
-import keboola.bingads.ex.state.YamlStateWriter;
+import keboola.bingads.ex.state.JsonlStateWriter;
 
 /**
  *
@@ -45,15 +45,15 @@ public class Runner {
         String dataPath = args[0];
         String outTablesPath = dataPath + File.separator + "out" + File.separator + "tables"; //parse config
         KBCConfig config = null;
-        File confFile = new File(args[0] + File.separator + "config.yml");
+        File confFile = new File(args[0] + File.separator + "config.json");
         if (!confFile.exists()) {
-            System.err.println("config.yml does not exist!");
+            System.err.println("config.json does not exist!");
             System.exit(1);
         }
         //Parse config file
         try {
             if (confFile.exists() && !confFile.isDirectory()) {
-                config = YamlConfigParser.parseFile(confFile);
+                config = JsonConfigParser.parseFile(confFile);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -71,11 +71,11 @@ public class Runner {
             ex.printStackTrace();
         }
         //retrieve stateFile
-        File stateFile = new File(dataPath + File.separator + "in" + File.separator + "state.yml");
+        File stateFile = new File(dataPath + File.separator + "in" + File.separator + "state.json");
         LastState lastState = null;
         if (stateFile.exists()) {
             try {
-                lastState = (LastState) YamlConfigParser.parseFile(stateFile, LastState.class);
+                lastState = (LastState) JsonConfigParser.parseFile(stateFile, LastState.class);
             } catch (IOException ex) {
                 Logger.getLogger(Runner.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -185,7 +185,7 @@ public class Runner {
 
         /*Write state file*/
         try {
-            YamlStateWriter.writeStateFile(dataPath + File.separator + "out" + File.separator + "state.yml", newState);
+            JsonlStateWriter.writeStateFile(dataPath + File.separator + "out" + File.separator + "state.json", newState);
         } catch (IOException ex) {
             System.err.println("Error building state file " + ex.getMessage());
             System.exit(1);
