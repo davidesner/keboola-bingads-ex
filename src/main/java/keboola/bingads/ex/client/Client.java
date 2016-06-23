@@ -49,6 +49,8 @@ public class Client {
      * @param clientSecret
      * @param accessToken
      * @param expiresIn
+     * @param customerId
+     * @param accountId
      */
     public Client(String clientId, String developerToken, String refreshToken, String clientSecret, String accessToken, Long expiresIn, Long customerId, Long accountId) {
         oAuthCodeGrant = new OAuthKbcAppCodeGrant(clientId, clientSecret, accessToken, refreshToken, expiresIn);
