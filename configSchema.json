@@ -1,0 +1,160 @@
+{
+    "title": "BingAds extractor configuration",
+    "type": "object",
+    "properties": {
+        "#devKey": {
+            "title": "Developer Token",
+            "type": "string",
+            "description": "Your developer token"
+        },
+        "customerId": {
+            "title": "Customer ID",
+            "type": "string",
+            "description": "Customer identifier of your BingAds account."
+        },
+        "accountId": {
+            "title": "Account ID",
+            "type": "string",
+            "description": "Account identifier."
+        },
+        "bucket": {
+            "title": "Storage bucket",
+            "type": "string",
+            "description": "Storage bucket where the result will be uploaded. (i.e. in.c-bing-ex)"
+        },
+        "sinceLast": {
+            "type": "boolean",
+            "description": "Continue download from last state (retrieves data since last download was perfomed)",
+            "default": true
+        },
+        "bulkRequests": {
+            "title": "Bulk Request Objects",
+            "type": "object",
+            "format": "table",
+            "uniqueItems": true,
+            "description": "List of datasets to retrieve from Bulk Service",
+            "properties": {
+                "ads": {
+                    "type": "boolean",
+                    "format": "table",
+                    "title": "ads",
+                    "template": "true"
+                },
+                "adGroups": {
+                    "type": "boolean",
+                    "title": "adGroups",
+                    "default": true
+                }
+                ,
+                "campaigns": {
+                    "type": "boolean",
+                    "title": "campaigns",
+                    "default": true
+                }
+                ,
+                "keywords": {
+                    "type": "boolean",
+                    "title": "keywords",
+                    "default": true
+                }
+                ,
+                "campQualityScore": {
+                    "type": "boolean",
+                    "title": "campQualityScore",
+                    "default": true
+                },
+                "siteLinkAddExtensions": {
+                    "type": "boolean",
+                    "title": "siteLinkAddExtensions",
+                    "default": true
+                }
+            }
+        },
+        "reportRequests": {
+            "type": "array",
+            "title": "Performance data datasets",
+            "description": "List of datasets retrieved from Reporting Service",
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "title": "Report",
+                "properties": {
+                    "type": {
+                        "propertyOrder": 1000,
+                        "type": "string",
+                        "title": "Report query",
+                        "enum": ["AdsPerformance", "KeywordPerformance", "AdExtensionDetail", "AdExtensionByKeyWord", "AdExtensionByAd"]
+
+                    },
+                    "incremental ": {
+                        "propertyOrder": 2000,
+                        "title": "Storage upload mode",
+                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                        "type": "boolean",
+                        "enum": [
+                            false,
+                            true
+                        ],
+                        "default": false,
+                        "options": {
+                            "enum_titles": [
+                                "Full",
+                                "Incremental"
+                            ]
+                        }
+
+                    },
+                    "pkey": {
+                        "type": "array",
+                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                        "propertyOrder": 3000,
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true
+                    },
+                    "startDate": {
+                        "propertyOrder": 4000,
+                        "type": "string",
+                        "title": "Start Date",
+                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs."
+                    },
+                    "reportPeriod": {
+                        "propertyOrder": 5000,
+                        "type": "string",
+                        "title": "Report Period",
+                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter)",
+                        "enum": ["LastFourWeeks", "LastMonth", "LastSevenDays", "LastSixMonths", "LastThreeMonths",
+                            "LastWeek", "LastYear", "ThisMonth", "ThisWeek",
+                            "ThisYear", "Today", "Yesterday"],
+                        "default": "null"
+                    },
+                    "aggregationPeriod": {
+                        "propertyOrder": 6000,
+                        "type": "string",
+                        "title": "Aggregation Period",
+                        "description": "Aggregation level of result data",
+                        "enum": ["Daily", "DayOfWeek", "Hourly", "HourOfDay", "Monthly",
+                            "Summary", "Weekly", "Yearly"],
+                        "default": "Daily"
+                    },
+                    "columns": {
+                        "propertyOrder": 7000,
+                        "title": "Columns",
+                        "description": "List of supported columns according to report type",
+                        "type": ["array", "null"],
+                        "uniqueItems": true,
+                        "items": {
+                            "title": "Column",
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "type", "startDate", "aggregationPeriod"]
+            }
+        }
+    },
+    "required": ["#devKey", "customerId", "accountId", "bucket", "sinceLast", "bulkRequests", "reportRequests"
+    ]
+}

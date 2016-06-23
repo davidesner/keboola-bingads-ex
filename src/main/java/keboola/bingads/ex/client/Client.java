@@ -50,14 +50,15 @@ public class Client {
      * @param accessToken
      * @param expiresIn
      */
-    public Client(String clientId, String developerToken, String refreshToken, String clientSecret, String accessToken, Long expiresIn) {
+    public Client(String clientId, String developerToken, String refreshToken, String clientSecret, String accessToken, Long expiresIn, Long customerId, Long accountId) {
         oAuthCodeGrant = new OAuthKbcAppCodeGrant(clientId, clientSecret, accessToken, refreshToken, expiresIn);
         OAuthDesktopMobileAuthCodeGrant oAuthWebAuthCodeGrant = new OAuthDesktopMobileAuthCodeGrant(clientId, refreshToken);
 
         authorizationData = new AuthorizationData();
+
         authorizationData.setDeveloperToken(developerToken);
-        authorizationData.setAccountId(45027777);
-        authorizationData.setCustomerId(16221187);
+        authorizationData.setAccountId(accountId);
+        authorizationData.setCustomerId(customerId);
         authorizationData.setAuthentication(oAuthCodeGrant);
         //authorizationData.setAccountId(B015L3PC);
 

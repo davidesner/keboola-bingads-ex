@@ -49,14 +49,33 @@ public class ReportRequestFactory {
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByAd) {
                 AdExtensionByAdReportRequest reportReq = new AdExtensionByAdReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
+                //validate pkey
+                String colValidError = "";
+                if (br.getPkey() != null && br.getPkey().length > 0) {
+                    for (String col : br.getPkey()) {
+                        try {
+                            AdExtensionByAdReportColumn.fromValue(col);
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+                }
                 //set columns     
                 ArrayOfAdExtensionByAdReportColumn columns = new ArrayOfAdExtensionByAdReportColumn();
                 if (br.getColumns() == null) {
                     columns.getAdExtensionByAdReportColumns().addAll(Arrays.asList(AdExtensionByAdReportColumn.values()));
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getAdExtensionByAdReportColumns().add(AdExtensionByAdReportColumn.fromValue(col));
+                        try {
+                            columns.getAdExtensionByAdReportColumns().add(AdExtensionByAdReportColumn.fromValue(col));
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". '" + col + "' is not a valid column name, check request specs.\n";
+                        }
                     }
+                }
+
+                if (!colValidError.equals("")) {
+                    throw new ClientException(colValidError);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -68,14 +87,33 @@ public class ReportRequestFactory {
             if (br.getType() == BReportRequest.reportTypes.AdExtensionByKeyWord) {
                 AdExtensionByKeywordReportRequest reportReq = new AdExtensionByKeywordReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
+                //validate pkey
+                String colValidError = "";
+                if (br.getPkey() != null && br.getPkey().length > 0) {
+                    for (String col : br.getPkey()) {
+                        try {
+                            AdExtensionByKeywordReportColumn.fromValue(col);
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+                }
                 //set columns     
                 ArrayOfAdExtensionByKeywordReportColumn columns = new ArrayOfAdExtensionByKeywordReportColumn();
                 if (br.getColumns() == null) {
                     columns.getAdExtensionByKeywordReportColumns().addAll(Arrays.asList(AdExtensionByKeywordReportColumn.values()));
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getAdExtensionByKeywordReportColumns().add(AdExtensionByKeywordReportColumn.fromValue(col));
+                        try {
+                            columns.getAdExtensionByKeywordReportColumns().add(AdExtensionByKeywordReportColumn.fromValue(col));
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". '" + col + "' is not a valid column name, check request specs.\n";
+                        }
                     }
+                }
+
+                if (!colValidError.equals("")) {
+                    throw new ClientException(colValidError);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -87,6 +125,17 @@ public class ReportRequestFactory {
             if (br.getType() == BReportRequest.reportTypes.AdExtensionDetail) {
                 AdExtensionDetailReportRequest reportReq = new AdExtensionDetailReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
+                //validate pkey
+                String colValidError = "";
+                if (br.getPkey() != null && br.getPkey().length > 0) {
+                    for (String col : br.getPkey()) {
+                        try {
+                            AdExtensionDetailReportColumn.fromValue(col);
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+                }
                 //set columns     
                 ArrayOfAdExtensionDetailReportColumn columns = new ArrayOfAdExtensionDetailReportColumn();
                 if (br.getColumns() == null) {
@@ -94,9 +143,16 @@ public class ReportRequestFactory {
 
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getAdExtensionDetailReportColumns().add(AdExtensionDetailReportColumn.fromValue(col));
-
+                        try {
+                            columns.getAdExtensionDetailReportColumns().add(AdExtensionDetailReportColumn.fromValue(col));
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". '" + col + "' is not a valid column name, check request specs.\n";
+                        }
                     }
+                }
+
+                if (!colValidError.equals("")) {
+                    throw new ClientException(colValidError);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -109,14 +165,33 @@ public class ReportRequestFactory {
             if (br.getType() == BReportRequest.reportTypes.AdsPerformance) {
                 AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
                 reportReq.setAggregation(NonHourlyReportAggregation.fromValue(br.getAggregationPeriod()));
+                //validate pkey
+                String colValidError = "";
+                if (br.getPkey() != null && br.getPkey().length > 0) {
+                    for (String col : br.getPkey()) {
+                        try {
+                            AdPerformanceReportColumn.fromValue(col);
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+                }
                 //set columns     
                 ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
                 if (br.getColumns() == null) {
                     columns.getAdPerformanceReportColumns().addAll(Arrays.asList(AdPerformanceReportColumn.values()));
                 } else {
                     for (String col : br.getColumns()) {
-                        columns.getAdPerformanceReportColumns().add(AdPerformanceReportColumn.fromValue(col));
+                        try {
+                            columns.getAdPerformanceReportColumns().add(AdPerformanceReportColumn.fromValue(col));
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". '" + col + "' is not a valid column name, check request specs.\n";
+                        }
                     }
+                }
+
+                if (!colValidError.equals("")) {
+                    throw new ClientException(colValidError);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -129,14 +204,34 @@ public class ReportRequestFactory {
             if (br.getType() == BReportRequest.reportTypes.KeywordPerformance) {
                 KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
+                //validate pkey
+                String colValidError = "";
+                if (br.getPkey() != null && br.getPkey().length > 0) {
+                    for (String col : br.getPkey()) {
+                        try {
+                            KeywordPerformanceReportColumn.fromValue(col);
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+                }
                 //set columns     
                 ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
                 if (br.getColumns() == null) {
                     columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
                     columns.getKeywordPerformanceReportColumns().remove(KeywordPerformanceReportColumn.KEYWORD_MATCH_TYPE_ID);
                 } else {
+
                     for (String col : br.getColumns()) {
-                        columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));
+                        try {
+                            columns.getKeywordPerformanceReportColumns().add(KeywordPerformanceReportColumn.fromValue(col));
+                        } catch (IllegalArgumentException ex) {//validate columns
+                            colValidError += "Unable to proccess request " + br.getType().name() + ". '" + col + "' is not a valid column name, check request specs.\n";
+                        }
+                    }
+
+                    if (!colValidError.equals("")) {
+                        throw new ClientException(colValidError);
                     }
                 }
                 reportReq.setColumns(columns);

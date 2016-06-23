@@ -20,6 +20,7 @@ import keboola.bingads.ex.client.ClientException;
 import keboola.bingads.ex.client.ReportResult;
 import keboola.bingads.ex.client.ResultException;
 import keboola.bingads.ex.config.KBCConfig;
+import keboola.bingads.ex.config.KBCParameters;
 import keboola.bingads.ex.config.YamlConfigParser;
 import keboola.bingads.ex.config.pojos.BReportRequest;
 import keboola.bingads.ex.config.pojos.BulkRequests;
@@ -46,7 +47,6 @@ public class Runner {
         KBCConfig config = null;
         File confFile = new File(args[0] + File.separator + "config.yml");
         if (!confFile.exists()) {
-            System.out.println("config.yml does not exist!");
             System.err.println("config.yml does not exist!");
             System.exit(1);
         }
@@ -57,7 +57,7 @@ public class Runner {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println("Failed to parse config file");
+            System.out.println("Failed to parse config file.");
             System.err.println(ex.getMessage());
             System.exit(1);
         }
@@ -82,9 +82,9 @@ public class Runner {
         } else {
             System.out.println("State file does not exist. (first run?)");
         }
-
-        Client cl = new Client(config.getOAuthCredentials().getAppKey(), config.getParams().getDevKey(),
-                config.getOAuthCredentials().getRefreshToken(), config.getOAuthCredentials().getAppSecret(), "", new Long(1));
+        KBCParameters params = config.getParams();
+        Client cl = new Client(config.getOAuthCredentials().getAppKey(), params.getDevKey(),
+                config.getOAuthCredentials().getRefreshToken(), config.getOAuthCredentials().getAppSecret(), "", new Long(1), params.getCustomerId(), params.getAccountId());
 
         Map<String, Boolean> bulkReqestsToDownload = config.getParams().getBulkRequests().getBulkFiles();
         Map<String, Date> lastBulkRequests = null;
@@ -129,7 +129,6 @@ public class Runner {
             try {
                 res = cl.downloadBulkData(br.getKey(), qScore, false, outTablesPath, lastSync);
             } catch (ClientException ex) {
-                System.out.println(ex.getMessage());
                 System.err.println(ex.getMessage());
                 System.exit(ex.getSeverity());
             }
@@ -142,8 +141,7 @@ public class Runner {
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, res.getResultFile().getName());
             } catch (IOException ex) {
-                System.out.println("Error building manifest file " + ex.getMessage());
-                System.err.println(ex.getMessage());
+                System.err.println("Error building manifest file " + ex.getMessage());
                 System.exit(2);
             }
 
@@ -167,12 +165,7 @@ public class Runner {
 
             try {
                 rResult = cl.downloadReport(repReq, outTablesPath, lastSync);
-            } catch (ClientException ex) {
-                System.out.println(ex.getMessage());
-                System.err.println(ex.getMessage());
-                System.exit(ex.getSeverity());
-            } catch (ResultException ex) {
-                System.out.println(ex.getMessage());
+            } catch (ClientException | ResultException ex) {
                 System.err.println(ex.getMessage());
                 System.exit(ex.getSeverity());
             }
@@ -185,8 +178,7 @@ public class Runner {
             try {
                 ManifestBuilder.buildManifestFile(man, outTablesPath, rResult.getResultFile().getName());
             } catch (IOException ex) {
-                System.out.println("Error building manifest file " + ex.getMessage());
-                System.err.println(ex.getMessage());
+                System.err.println("Error building manifest file " + ex.getMessage());
                 System.exit(2);
             }
         }
@@ -195,8 +187,7 @@ public class Runner {
         try {
             YamlStateWriter.writeStateFile(dataPath + File.separator + "out" + File.separator + "state.yml", newState);
         } catch (IOException ex) {
-            System.out.println("Error building state file " + ex.getMessage());
-            System.err.println(ex.getMessage());
+            System.err.println("Error building state file " + ex.getMessage());
             System.exit(1);
         }
 

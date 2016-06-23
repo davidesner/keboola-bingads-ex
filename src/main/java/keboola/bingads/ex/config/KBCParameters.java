@@ -153,6 +153,10 @@ public class KBCParameters {
         return accountId;
     }
 
+    public Long getCustomerId() {
+        return customerId;
+    }
+
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
