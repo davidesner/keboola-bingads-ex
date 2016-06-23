@@ -36,39 +36,45 @@
             "properties": {
                 "ads": {
                     "type": "boolean",
-                    "format": "table",
-                    "title": "ads",
-                    "template": "true"
+                    "format": "checkbox",
+                    "title": "Ads",
+                    "default": true
                 },
                 "adGroups": {
                     "type": "boolean",
-                    "title": "adGroups",
+                    "format": "checkbox",
+                    "title": "Ad Groups",
                     "default": true
                 }
                 ,
                 "campaigns": {
                     "type": "boolean",
-                    "title": "campaigns",
+                    "format": "checkbox",
+                    "title": "Campaigns",
                     "default": true
                 }
                 ,
                 "keywords": {
                     "type": "boolean",
-                    "title": "keywords",
+                    "format": "checkbox",
+                    "title": "Keywords",
                     "default": true
                 }
                 ,
                 "campQualityScore": {
                     "type": "boolean",
-                    "title": "campQualityScore",
+                    "format": "checkbox",
+                    "title": "Campaign Quality Score",
                     "default": true
                 },
                 "siteLinkAddExtensions": {
                     "type": "boolean",
-                    "title": "siteLinkAddExtensions",
+                    "format": "checkbox",
+                    "title": "Site Link Add-Extensions",
                     "default": true
                 }
-            }
+            },
+            "required": ["ads", "adGroups", "campaigns", "keywords", "campQualityScore", "siteLinkAddExtensions"]
         },
         "reportRequests": {
             "type": "array",
@@ -86,7 +92,7 @@
                         "enum": ["AdsPerformance", "KeywordPerformance", "AdExtensionDetail", "AdExtensionByKeyWord", "AdExtensionByAd"]
 
                     },
-                    "incremental ": {
+                    "incremental": {
                         "propertyOrder": 2000,
                         "title": "Storage upload mode",
                         "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
@@ -105,10 +111,12 @@
 
                     },
                     "pkey": {
+                        "title": "Pkeys",
                         "type": "array",
                         "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
                         "propertyOrder": 3000,
                         "items": {
+                            "title": "Pkey",
                             "type": "string"
                         },
                         "uniqueItems": true
@@ -151,7 +159,7 @@
                     }
                 },
                 "required": [
-                    "type", "startDate", "aggregationPeriod"]
+                    "type", "incremental", "pkey", "startDate", "reportPeriod", "aggregationPeriod", "columns"]
             }
         }
     },
