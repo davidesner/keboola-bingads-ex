@@ -66,9 +66,11 @@ public class BReportRequest {
         } else {
             this.aggregationPeriod = aggregationPeriod;
         }
-        if (startDate != null) {
+        if (startDate != null && !startDate.equals("")) {
             this.startDate = startDate;
             setDate_from(startDate);
+        } else {
+            this.startDate = null;
         }
     }
 

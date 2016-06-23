@@ -21,11 +21,11 @@ import keboola.bingads.ex.config.pojos.BReportRequest;
  * @created 2015
  */
 public class KBCParameters {
-
+    
     private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "accountId", "bulkRequests"};
     private final Map<String, Object> parametersMap;
     private Date date_from;
-
+    
     @JsonProperty("#devKey")
     private String devKey;
     @JsonProperty("accountId")
@@ -44,12 +44,12 @@ public class KBCParameters {
     private BulkRequests bulkRequests;
     @JsonProperty("reportRequests")
     private List<BReportRequest> reportRequests;
-
+    
     public KBCParameters() {
         parametersMap = new HashMap<>();
-
+        
     }
-
+    
     @JsonCreator
     public KBCParameters(@JsonProperty("#devKey") String devKey, @JsonProperty("accountId") Long accountId, @JsonProperty("customerId") Long customerId,
             @JsonProperty("dateTo") String dateTo, @JsonProperty("sinceLast") Boolean sinceLast, @JsonProperty("dateFrom") String dateFrom, @JsonProperty("bucket") String bucket,
@@ -64,8 +64,8 @@ public class KBCParameters {
         } else {
             this.sinceLast = sinceLast;
         }
-
-        if (dateFrom != null) {
+        
+        if (dateFrom != null && !dateFrom.equals("")) {
             setDate_from(dateFrom);
         }
         this.bulkRequests = bulkRequests;
@@ -79,7 +79,7 @@ public class KBCParameters {
         // parametersMap.put("dateFrom", dateFrom);
         parametersMap.put("bucket", bucket);
         parametersMap.put("bulkRequests", bulkRequests);
-
+        
     }
 
     /**
@@ -95,10 +95,10 @@ public class KBCParameters {
                 missing.add(REQUIRED_FIELDS[i]);
             }
         }
-
+        
         return missing;
     }
-
+    
     public boolean validateReportRequests() throws ValidationException {
         boolean res = false;
         for (BReportRequest r : reportRequests) {
@@ -106,75 +106,75 @@ public class KBCParameters {
         }
         return res;
     }
-
+    
     private void setDate_from(String dateString) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         this.date_from = format.parse(dateString);
-
+        
     }
-
+    
     public Date getDate_from() {
         return date_from;
     }
-
+    
     public Map<String, Object> getParametersMap() {
         return parametersMap;
     }
-
+    
     public Boolean getSinceLast() {
         return sinceLast;
     }
-
+    
     public String getBucket() {
         return bucket;
     }
-
+    
     public void setBucket(String bucket) {
         this.bucket = bucket;
     }
-
+    
     public Long getUserId() {
         return customerId;
     }
-
+    
     public void setUserId(Long customerId) {
         this.customerId = customerId;
     }
-
+    
     public String getDevKey() {
         return devKey;
     }
-
+    
     public void setDevKey(String devKey) {
         this.devKey = devKey;
     }
-
+    
     public Long getAccountId() {
         return accountId;
     }
-
+    
     public Long getCustomerId() {
         return customerId;
     }
-
+    
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
-
+    
     public String getDateFrom() {
         return dateFrom;
     }
-
+    
     public void setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
     }
-
+    
     public BulkRequests getBulkRequests() {
         return bulkRequests;
     }
-
+    
     public List<BReportRequest> getReportRequests() {
         return reportRequests;
     }
-
+    
 }
