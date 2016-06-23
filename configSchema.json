@@ -119,6 +119,7 @@
                             "title": "Pkey",
                             "type": "string"
                         },
+                        "default": null,
                         "uniqueItems": true
                     },
                     "startDate": {
