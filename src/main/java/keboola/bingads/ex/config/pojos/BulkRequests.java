@@ -2,10 +2,12 @@
  */
 package keboola.bingads.ex.config.pojos;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import keboola.bingads.ex.config.ValidationException;
 
 /**
@@ -51,7 +53,7 @@ public class BulkRequests {
         this.bulkFiles.put("ADS", ads);
         this.bulkFiles.put("AD_GROUPS", adGroups);
         this.bulkFiles.put("KEYWORDS", keywords);
-        this.bulkFiles.put("SITE_LINKS_AD_EXTENSIONS", keywords);
+        this.bulkFiles.put("SITE_LINKS_AD_EXTENSIONS", siteLinkAddExtensions);
 
     }
 
