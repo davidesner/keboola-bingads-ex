@@ -2,6 +2,8 @@
  */
 package keboola.bingads.ex.client;
 
+import java.util.Arrays;
+
 import com.microsoft.bingads.reporting.AccountThroughAdGroupReportScope;
 import com.microsoft.bingads.reporting.AdExtensionByAdReportColumn;
 import com.microsoft.bingads.reporting.AdExtensionByAdReportRequest;
@@ -16,7 +18,6 @@ import com.microsoft.bingads.reporting.ArrayOfAdExtensionByKeywordReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfAdExtensionDetailReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfAdPerformanceReportColumn;
 import com.microsoft.bingads.reporting.ArrayOfKeywordPerformanceReportColumn;
-import com.microsoft.bingads.reporting.Date;
 import com.microsoft.bingads.reporting.KeywordPerformanceReportColumn;
 import com.microsoft.bingads.reporting.KeywordPerformanceReportRequest;
 import com.microsoft.bingads.reporting.NonHourlyReportAggregation;
@@ -24,7 +25,6 @@ import com.microsoft.bingads.reporting.ReportAggregation;
 import com.microsoft.bingads.reporting.ReportFormat;
 import com.microsoft.bingads.reporting.ReportRequest;
 import com.microsoft.bingads.reporting.ReportTime;
-import java.util.Arrays;
 
 import keboola.bingads.ex.config.pojos.BReportRequest;
 
@@ -35,6 +35,8 @@ import keboola.bingads.ex.config.pojos.BReportRequest;
  */
 public class ReportRequestFactory {
 
+//FIXME REFACTOR!! code redundance, unclear, maybe use generics?
+	
     public static ReportRequest createReportRequest(BReportRequest br, long accountId, ReportTime time) throws ClientException {
         ReportRequest request = null;
 
@@ -51,7 +53,7 @@ public class ReportRequestFactory {
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
-                if (br.getPkey() != null && br.getPkey().length > 0) {
+                /*if (br.getPkey() != null && br.getPkey().length > 0) {
                     for (String col : br.getPkey()) {
                         try {
                             AdExtensionByAdReportColumn.fromValue(col);
@@ -59,7 +61,7 @@ public class ReportRequestFactory {
                             colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
                         }
                     }
-                }
+                }*/
                 //set columns     
                 ArrayOfAdExtensionByAdReportColumn columns = new ArrayOfAdExtensionByAdReportColumn();
                 if (br.getColumns() == null) {
@@ -89,7 +91,7 @@ public class ReportRequestFactory {
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
-                if (br.getPkey() != null && br.getPkey().length > 0) {
+                /*if (br.getPkey() != null && br.getPkey().length > 0) {
                     for (String col : br.getPkey()) {
                         try {
                             AdExtensionByKeywordReportColumn.fromValue(col);
@@ -97,7 +99,7 @@ public class ReportRequestFactory {
                             colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
                         }
                     }
-                }
+                }*/
                 //set columns     
                 ArrayOfAdExtensionByKeywordReportColumn columns = new ArrayOfAdExtensionByKeywordReportColumn();
                 if (br.getColumns() == null) {
@@ -127,7 +129,7 @@ public class ReportRequestFactory {
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
-                if (br.getPkey() != null && br.getPkey().length > 0) {
+                /*if (br.getPkey() != null && br.getPkey().length > 0) {
                     for (String col : br.getPkey()) {
                         try {
                             AdExtensionDetailReportColumn.fromValue(col);
@@ -135,7 +137,7 @@ public class ReportRequestFactory {
                             colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
                         }
                     }
-                }
+                }*/
                 //set columns     
                 ArrayOfAdExtensionDetailReportColumn columns = new ArrayOfAdExtensionDetailReportColumn();
                 if (br.getColumns() == null) {
@@ -167,7 +169,7 @@ public class ReportRequestFactory {
                 reportReq.setAggregation(NonHourlyReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
-                if (br.getPkey() != null && br.getPkey().length > 0) {
+                /*if (br.getPkey() != null && br.getPkey().length > 0) {
                     for (String col : br.getPkey()) {
                         try {
                             AdPerformanceReportColumn.fromValue(col);
@@ -175,7 +177,7 @@ public class ReportRequestFactory {
                             colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
                         }
                     }
-                }
+                }*/
                 //set columns     
                 ArrayOfAdPerformanceReportColumn columns = new ArrayOfAdPerformanceReportColumn();
                 if (br.getColumns() == null) {
@@ -206,7 +208,7 @@ public class ReportRequestFactory {
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
-                if (br.getPkey() != null && br.getPkey().length > 0) {
+                /*if (br.getPkey() != null && br.getPkey().length > 0) {
                     for (String col : br.getPkey()) {
                         try {
                             KeywordPerformanceReportColumn.fromValue(col);
@@ -214,7 +216,7 @@ public class ReportRequestFactory {
                             colValidError += "Unable to proccess request " + br.getType().name() + ". Primary key specified:'" + col + "' is not a valid column name, check request specs.\n";
                         }
                     }
-                }
+                }*/
                 //set columns     
                 ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
                 if (br.getColumns() == null) {
