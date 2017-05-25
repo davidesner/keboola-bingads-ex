@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import keboola.bingads.ex.utils.CsvUtils;
 
 /**
@@ -178,7 +179,9 @@ public class ReportResult implements ApiDownloadResult {
     private char[] readLineWithNLBackWards(RandomAccessFile f) throws IOException {
 
         long length = f.length() - 1;
-        byte b;
+        if (length < 0) {
+        	return new char[0];
+        }
         //set to current pointer if not at the end
         if (f.getFilePointer() < length && f.getFilePointer() > 0) {
             length = f.getFilePointer() - 1;

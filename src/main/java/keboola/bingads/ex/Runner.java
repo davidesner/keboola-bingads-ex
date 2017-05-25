@@ -14,20 +14,20 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 import keboola.bingads.ex.client.BulkResult;
 import keboola.bingads.ex.client.Client;
 import keboola.bingads.ex.client.ClientException;
 import keboola.bingads.ex.client.ReportResult;
 import keboola.bingads.ex.client.ResultException;
+import keboola.bingads.ex.config.JsonConfigParser;
 import keboola.bingads.ex.config.KBCConfig;
 import keboola.bingads.ex.config.KBCParameters;
-import keboola.bingads.ex.config.JsonConfigParser;
 import keboola.bingads.ex.config.pojos.BReportRequest;
-import keboola.bingads.ex.config.pojos.BulkRequests;
 import keboola.bingads.ex.config.tableconfig.ManifestBuilder;
 import keboola.bingads.ex.config.tableconfig.ManifestFile;
-import keboola.bingads.ex.state.LastState;
 import keboola.bingads.ex.state.JsonlStateWriter;
+import keboola.bingads.ex.state.LastState;
 
 /**
  *
