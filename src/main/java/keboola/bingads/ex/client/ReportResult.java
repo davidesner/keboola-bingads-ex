@@ -120,13 +120,14 @@ public class ReportResult implements ApiDownloadResult {
                 lastLength = f.getFilePointer();
                 currLine = readLineWithNLBackWards(f);
                 length = f.getFilePointer();
-            } while (headerLength != CsvUtils.getCsvColumnLength(new String(currLine), ",".charAt(0), "\"".charAt(0)));
+            } while (headerLength != CsvUtils.getCsvColumnLength(new String(currLine), ',', '"'));
 
             f.setLength(lastLength);
             f.close();
         } catch (FileNotFoundException ex) {
             throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
         } catch (IOException ex) {
+        	ex.printStackTrace();
             throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
         } catch (Exception ex) {
             throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
@@ -142,7 +143,7 @@ public class ReportResult implements ApiDownloadResult {
             int ch = in.read();
             chars.add((char) ch);
             //continue until NL character
-            while (!isNL(ch)) {
+            while (!isNL(ch) && ch != -1) {
                 ch = in.read();
                 chars.add((char) ch);
             }
@@ -194,7 +195,7 @@ public class ReportResult implements ApiDownloadResult {
 
         chars.add((char) ch);
         //continue until NL character
-        while (!isNL(ch)) {
+        while (!isNL(ch) && length >= 0) {
             f.seek(length);
             ch = f.read();
             chars.add((char) ch);
@@ -203,7 +204,7 @@ public class ReportResult implements ApiDownloadResult {
         //reached new line
         boolean isNl = true;
         //skip other remaining NL chars until the start of next line
-        while (isNl) {
+        while (isNl && length>=0) {
             f.seek(length);
             ch = f.read();
             if (isNL(ch)) {
