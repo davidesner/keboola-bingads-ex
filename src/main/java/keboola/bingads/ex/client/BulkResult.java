@@ -61,7 +61,6 @@ public class BulkResult implements ApiDownloadResult {
             }
             setLastSync(line[syncPos]);
             //set accId
-            line = csvreader.readNext();
             this.accId = new Long(line[ACC_ID_POSITION]);
             
 
