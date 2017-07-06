@@ -21,6 +21,7 @@ import com.microsoft.bingads.customermanagement.AccountInfo;
 
 import esnerda.keboola.components.result.ResultFileMetadata;
 import esnerda.keboola.components.result.impl.DefaultBeanResultWriter;
+import keboola.bingads.ex.client.ApiDownloadResult;
 import keboola.bingads.ex.client.BulkResult;
 import keboola.bingads.ex.client.Client;
 import keboola.bingads.ex.client.ClientException;
@@ -169,16 +170,18 @@ public class Runner {
 	private static String[] downloadAndStoreReportsForAccounts(List<Long> accIds, BReportRequest repReq,
 			Calendar lastSync, String resfolder) {
 		ReportResult rResult = null;
+		List<ApiDownloadResult> results = new ArrayList<>();
 		for (Long accId : accIds) {
 			try {
 				rResult = cl.downloadReport(repReq, resfolder, lastSync, accId);
+				results.add(rResult);
 			} catch (ClientException | ResultException ex) {
 				System.err.println(ex.getMessage());
 				System.exit(ex.getSeverity());
 			}
 		}
 		try {
-			return CsvUtils.readHeader(rResult.getResultFile(), ',', '"', '\\', false, false);
+			return prepareSlicedTables(results);
 		} catch (Exception e) {
 			System.err.println("Error reading report headedr " + e.getMessage());
 			System.exit(2);
@@ -263,7 +266,7 @@ public class Runner {
 				lastSync = null;
 			}
 		}
-		List<BulkResult> results = new ArrayList<>();
+		List<ApiDownloadResult> results = new ArrayList<>();
 		for (Long accId : accIds) {
 			BulkResult res = null;
 			try {
@@ -284,11 +287,11 @@ public class Runner {
 
 	}
 
-	private static String[] prepareSlicedTables(List<BulkResult> results) throws Exception {
+	private static String[] prepareSlicedTables(List<ApiDownloadResult> results) throws Exception {
 		List<File> resultFiles = new ArrayList<>();
 		List<File> files = new ArrayList<>();
 		
-		for (BulkResult rs : results) {
+		for (ApiDownloadResult rs : results) {
 			files.add(rs.getResultFile());
 		}
 		// get colums
