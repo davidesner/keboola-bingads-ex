@@ -124,7 +124,7 @@ public class Runner {
 			newState.getReportRequests().put(repReq.getType().name(), lastRun);
 
 			// bulid manifest file
-			ManifestFile manFile = new ManifestFile.Builder(new File(resfolder).getName(), config.getParams().getBucket())
+			ManifestFile manFile = new ManifestFile.Builder(new File(resfolder).getName(), config.getParams().getBucket() + "." + repReq.getType().name().toLowerCase())
 					.setIncrementalLoad(true).setPrimaryKey(repReq.getPkey()).setDelimiter(",").setEnclosure("\"")
 					.setColumns(resultHeader).build();
 
@@ -213,7 +213,7 @@ public class Runner {
 	            newState.getBulkRequests().put(br.getKey(), lastRun);
 
 	            //bulid manifest file
-	            ManifestFile manFile = new ManifestFile.Builder(new File(resfolder).getName(), config.getParams().getBucket())
+	            ManifestFile manFile = new ManifestFile.Builder(new File(resfolder).getName(), config.getParams().getBucket() + "." + br.getKey().toLowerCase())
 						.setIncrementalLoad(true).setPrimaryKey(new String[]{"Id"})
 						.setDelimiter(",").setEnclosure("\"")
 						.setColumns(resultHeader).build();
