@@ -17,6 +17,10 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import com.microsoft.bingads.customermanagement.AccountInfo;
+
+import esnerda.keboola.components.result.ResultFileMetadata;
+import esnerda.keboola.components.result.impl.DefaultBeanResultWriter;
 import keboola.bingads.ex.client.BulkResult;
 import keboola.bingads.ex.client.Client;
 import keboola.bingads.ex.client.ClientException;
@@ -60,7 +64,13 @@ public class Runner {
 
         setUpClient();        
         
-        List<Long> accountIds = loadAccountIds();      
+        List<Long> accountIds = loadAccountIds();
+        try {
+			getAndStoreAccounts();
+		} catch (Exception e) {
+			System.err.print("Failed to download accounts table!" + e.getMessage());
+		}
+        
 
         Map<String, Boolean> bulkReqestsToDownload = config.getParams().getBulkRequests().getBulkFiles();
         Map<String, Date> lastBulkRequests = null;
@@ -103,6 +113,24 @@ public class Runner {
         }
 
     }
+
+	private static void getAndStoreAccounts() throws Exception {
+		DefaultBeanResultWriter<AccountInfo> accInfoWriter = new DefaultBeanResultWriter<>("accounts.csv", new String[]{"id"});
+		accInfoWriter.initWriter(outTablesPath, AccountInfo.class);
+		List<ResultFileMetadata> res = accInfoWriter.writeAndRetrieveResuts(cl.getAllAccountsInfo());
+		
+		ManifestFile manFile = new ManifestFile.Builder("accounts.csv", config.getParams().getBucket() + "." + "accounts")
+				.setIncrementalLoad(true).setPrimaryKey(new String[]{"id"}).setDelimiter(",").setEnclosure("\"")
+				.build();
+
+		try {
+			ManifestBuilder.buildManifestFile(manFile, outTablesPath, "accounts.csv");
+		} catch (IOException ex) {
+			System.err.println("Error building manifest file " + ex.getMessage());
+			System.exit(2);
+		}
+		
+	}
 
 	private static void downloadReports(Map<String, Date> lastReportRequests, LastState lastState, LastState newState, List<Long> accIds) {
 		List<BReportRequest> repRequests = config.getParams().getReportRequests();

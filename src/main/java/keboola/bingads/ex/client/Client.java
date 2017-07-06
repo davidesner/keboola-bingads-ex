@@ -5,6 +5,7 @@ package keboola.bingads.ex.client;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -317,6 +318,20 @@ public class Client {
     		accIds.add(accInfo.getId());
     	}
     	return accIds;
+    }
+
+    public List<AccountInfo> getAllAccountsInfo() throws Exception {
+    	List<Long> accIds = new ArrayList<>();
+    	ServiceClient<ICustomerManagementService> cs = new ServiceClient<ICustomerManagementService>(
+    			authorizationData, 
+    			ICustomerManagementService.class);
+    	GetAccountsInfoRequest params =  new GetAccountsInfoRequest();
+    	params.setCustomerId(authorizationData.getCustomerId());
+    	GetAccountsInfoResponse resp = cs.getService().getAccountsInfo(params);
+    	if(resp == null) {
+    		return Collections.emptyList();
+    	}
+    	return resp.getAccountsInfo().getAccountInfos();
     }
     
     
