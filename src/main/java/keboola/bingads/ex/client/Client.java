@@ -2,10 +2,20 @@
  */
 package keboola.bingads.ex.client;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import com.microsoft.bingads.AuthorizationData;
 import com.microsoft.bingads.OAuthDesktopMobileAuthCodeGrant;
 import com.microsoft.bingads.OAuthTokens;
-
+import com.microsoft.bingads.ServiceClient;
+import com.microsoft.bingads.customermanagement.AccountInfo;
+import com.microsoft.bingads.customermanagement.GetAccountsInfoRequest;
+import com.microsoft.bingads.customermanagement.GetAccountsInfoResponse;
+import com.microsoft.bingads.customermanagement.ICustomerManagementService;
 import com.microsoft.bingads.reporting.AdApiError;
 import com.microsoft.bingads.reporting.AdApiFaultDetail_Exception;
 import com.microsoft.bingads.reporting.ApiFaultDetail_Exception;
@@ -16,7 +26,6 @@ import com.microsoft.bingads.reporting.ReportRequest;
 import com.microsoft.bingads.reporting.ReportTime;
 import com.microsoft.bingads.reporting.ReportingDownloadParameters;
 import com.microsoft.bingads.reporting.ReportingServiceManager;
-
 import com.microsoft.bingads.v10.bulk.BulkDownloadEntity;
 import com.microsoft.bingads.v10.bulk.BulkOperationProgressInfo;
 import com.microsoft.bingads.v10.bulk.BulkServiceManager;
@@ -24,10 +33,7 @@ import com.microsoft.bingads.v10.bulk.DataScope;
 import com.microsoft.bingads.v10.bulk.DownloadFileType;
 import com.microsoft.bingads.v10.bulk.DownloadParameters;
 import com.microsoft.bingads.v10.bulk.Progress;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
+
 import keboola.bingads.ex.config.pojos.BReportRequest;
 
 /**
@@ -59,7 +65,7 @@ public class Client {
         authorizationData = new AuthorizationData();
 
         authorizationData.setDeveloperToken(developerToken);
-        authorizationData.setAccountId(accountId);
+        //authorizationData.setAccountId(accountId);
         authorizationData.setCustomerId(customerId);
         authorizationData.setAuthentication(oAuthCodeGrant);
         //authorizationData.setAccountId(B015L3PC);
@@ -76,8 +82,9 @@ public class Client {
      * @return
      * @throws ClientException
      */
-    public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync) throws ClientException, ResultException {
+    public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync, long accountId) throws ClientException, ResultException {
 
+    	OAuthTokens tokens = oAuthCodeGrant.refreshTokensIfNeeded(true);
         Date startDate = new Date();
         Date endDate = new Date();
         Calendar curr = Calendar.getInstance();
@@ -104,9 +111,9 @@ public class Client {
             time.setPredefinedTime(com.microsoft.bingads.reporting.ReportTimePeriod.fromValue(request.getReportPeriod()));
         }
 
-        ReportRequest r = ReportRequestFactory.createReportRequest(request, authorizationData.getAccountId(), time);
+        ReportRequest r = ReportRequestFactory.createReportRequest(request, accountId, time);
 
-        ReportResult res = performReportRequest(r, resultPath, request.getType().name() + ".csv");
+        ReportResult res = performReportRequest(r, resultPath, request.getType().name() + accountId + ".csv");
         res.setLastSync(curr.getTime());
         return res;
     }
@@ -121,21 +128,20 @@ public class Client {
      * @return
      * @throws ClientException
      */
-    public BulkResult downloadBulkData(String type, boolean qualityScore, boolean performanceData, String resultFolderPath, Calendar lastSync) throws ClientException {
+    public BulkResult downloadBulkData(String type, boolean qualityScore, boolean performanceData, String resultFolderPath, Calendar lastSync, long accountId) throws ClientException {
 
         File resultFile = null;
         try {
-
+        	
             OAuthTokens tokens = oAuthCodeGrant.refreshTokensIfNeeded(true);
-
-            BulkServiceManager BulkService = new BulkServiceManager(authorizationData);
-
+            authorizationData.setAccountId(accountId);
+            BulkServiceManager bulkService = new BulkServiceManager(authorizationData);
 // Poll for downloads at reasonable intervals. You know your data better than anyone.
 // If you download an account that is well less than one million keywords, consider polling
 // at 15 to 20 second intervals. If the account contains about one million keywords, consider polling
 // at one minute intervals after waiting five minutes. For accounts with about four million keywords,
 // consider polling at one minute intervals after waiting 10 minutes.
-            BulkService.setStatusPollIntervalInMilliseconds(5000);
+            bulkService.setStatusPollIntervalInMilliseconds(5000);
 
             Progress<BulkOperationProgressInfo> progress = new Progress<BulkOperationProgressInfo>() {
                 @Override
@@ -148,7 +154,6 @@ public class Client {
 
             ArrayList<DataScope> dataScope = new ArrayList<DataScope>();
             dataScope.add(DataScope.ENTITY_DATA);
-            //if(perfData) dataScope.add(DataScope.ENTITY_PERFORMANCE_DATA);
             if (qualityScore) {
                 dataScope.add(DataScope.QUALITY_SCORE_DATA);
             }
@@ -157,22 +162,23 @@ public class Client {
             downloadParameters.setCampaignIds(null);
             downloadParameters.setFileType(DownloadFileType.CSV);
             downloadParameters.setLastSyncTimeInUTC(lastSync);
-            /* in case of performance data*/
- /* PerformanceStatsDateRange dr = new PerformanceStatsDateRange();
-            dr.setPredefinedTime(ReportTimePeriod.LAST_WEEK);
-            //downloadParameters.setPerformanceStatsDateRange(dr);*/
 
             ArrayList<BulkDownloadEntity> bulkDownloadEntities = new ArrayList<BulkDownloadEntity>();
             bulkDownloadEntities.add(BulkDownloadEntity.valueOf(type));
 
             downloadParameters.setEntities(bulkDownloadEntities);
-            downloadParameters.setResultFileDirectory(new File(resultFolderPath));
-            downloadParameters.setResultFileName(type.toLowerCase() + ".csv");
+            File directory = new File(resultFolderPath);
+            if (! directory.exists()){
+                directory.mkdir();
+            }
+
+            downloadParameters.setResultFileDirectory(directory);
+            downloadParameters.setResultFileName(type.toLowerCase() + accountId + ".csv");
             downloadParameters.setOverwriteResultFile(true);
 
             // Submit the download request, and the results file will be downloaded to the specified local file.
             System.out.println("Downloading bulk data: " + type);
-            resultFile = BulkService.downloadFileAsync(
+            resultFile = bulkService.downloadFileAsync(
                     downloadParameters,
                     progress,
                     null).get();
@@ -180,8 +186,9 @@ public class Client {
         } catch (InterruptedException ex) {
             throw new ClientException("Error downloading bulk data: " + type + " " + ex);
         } catch (ExecutionException ex) {
+        	ex.printStackTrace();
             String message = "";
-            Throwable cause = ex.getCause();
+            Throwable cause = ex.getCause().getCause().getCause();
             if (cause instanceof com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) {
                 com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v10.bulk.AdApiFaultDetail_Exception) cause;
                 message += "The operation failed with the following faults:\n";
@@ -237,7 +244,11 @@ public class Client {
 
         ReportingDownloadParameters reportingDownloadParameters = new ReportingDownloadParameters();
         reportingDownloadParameters.setReportRequest(request);
-        reportingDownloadParameters.setResultFileDirectory(new File(resultFolderPath));
+        File directory = new File(resultFolderPath);
+        if (! directory.exists()){
+            directory.mkdir();
+        }
+        reportingDownloadParameters.setResultFileDirectory(directory);
         reportingDownloadParameters.setResultFileName(resultFileName);
         reportingDownloadParameters.setOverwriteResultFile(true);
 
@@ -294,4 +305,19 @@ public class Client {
         return res;
     }
 
+    public List<Long> getAllAccountIds() throws Exception {
+    	List<Long> accIds = new ArrayList<>();
+    	ServiceClient<ICustomerManagementService> cs = new ServiceClient<ICustomerManagementService>(
+    			authorizationData, 
+    			ICustomerManagementService.class);
+    	GetAccountsInfoRequest params =  new GetAccountsInfoRequest();
+    	params.setCustomerId(authorizationData.getCustomerId());
+    	GetAccountsInfoResponse resp = cs.getService().getAccountsInfo(params);
+    	for(AccountInfo accInfo : resp.getAccountsInfo().getAccountInfos()) {
+    		accIds.add(accInfo.getId());
+    	}
+    	return accIds;
+    }
+    
+    
 }

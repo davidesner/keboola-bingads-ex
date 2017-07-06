@@ -2,9 +2,6 @@
  */
 package keboola.bingads.ex.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,8 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import keboola.bingads.ex.config.pojos.BulkRequests;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import keboola.bingads.ex.config.pojos.BReportRequest;
+import keboola.bingads.ex.config.pojos.BulkRequests;
 
 /**
  *
@@ -22,7 +23,7 @@ import keboola.bingads.ex.config.pojos.BReportRequest;
  */
 public class KBCParameters {
     
-    private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "accountId", "bulkRequests"};
+    private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "bulkRequests"};
     private final Map<String, Object> parametersMap;
     private Date date_from;
     
@@ -74,7 +75,6 @@ public class KBCParameters {
 
         //set param map
         parametersMap.put("devKey", devKey);
-        parametersMap.put("accountId", accountId);
         parametersMap.put("customerId", customerId);
         // parametersMap.put("dateFrom", dateFrom);
         parametersMap.put("bucket", bucket);

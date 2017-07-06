@@ -2,8 +2,6 @@
  */
 package keboola.bingads.ex.client;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,13 +12,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  *
@@ -28,9 +27,12 @@ import java.util.logging.Logger;
  * @created 2016
  */
 public class BulkResult implements ApiDownloadResult {
+	
+	private final static int ACC_ID_POSITION = 2;
 
     private File resultFile;
     private Date lastSync;
+    private Long accId;
 
     public BulkResult(File resultFile) throws Exception {
 
@@ -58,6 +60,10 @@ public class BulkResult implements ApiDownloadResult {
                 line = csvreader.readNext();
             }
             setLastSync(line[syncPos]);
+            //set accId
+            line = csvreader.readNext();
+            this.accId = new Long(line[ACC_ID_POSITION]);
+            
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BulkResult.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,7 +100,27 @@ public class BulkResult implements ApiDownloadResult {
 
     @Override
     public void cleanupCSV() {
+        final String lineSep=System.getProperty("line.separator");
+        File file2 = new File(resultFile.getAbsolutePath()+"1.csv");
+        try (BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(resultFile)));
+             BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file2)));){
+            
 
+           
+            String line = null;
+            //modify header
+			line = br.readLine();
+			bw.write(line + "," + "accId" + lineSep);
+			for (line = br.readLine(); line != null; line = br.readLine()) {
+				bw.write(line + "," + accId + lineSep);
+			}
+
+        }catch(Exception e){
+            System.out.println("Failed to modify files.");
+            System.exit(2);
+        }
+        resultFile.delete();
+        resultFile = file2;
     }
 
 }

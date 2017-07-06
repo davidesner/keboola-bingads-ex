@@ -2,11 +2,12 @@
  */
 package keboola.bingads.ex.config.tableconfig;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
 
 /**
  *
