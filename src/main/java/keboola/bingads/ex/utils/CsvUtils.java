@@ -3,15 +3,15 @@
 package keboola.bingads.ex.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,46 +34,17 @@ public class CsvUtils {
 	 * @throws IOException
 	 */
 	public static void removeHeaderFromCsv(File csvFile) throws Exception {
-		// create output file
 		File outFile = new File(csvFile.getParent() + File.separator + "tempRes");
-		FileChannel out = null;
-		FileOutputStream fout = null;
-		FileInputStream fis = null;
-		FileChannel in = null;
-		try {
-			// retrieve file header
-			fis = new FileInputStream(csvFile);
-
-			// read header
-			readLineWithNL(fis);
-
-			fout = new FileOutputStream(outFile);
-			out = fout.getChannel();
-			// Write the rest of the file using NIO
-			in = fis.getChannel();
-			// set position to header
-			long pos = in.position() - 1;
-			for (long p = pos, l = in.size(); p < l;) {
-				p += in.transferTo(p, l - p, out);
-			}
-		} catch (Exception ex) {			
-			throw ex;
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-				if (fout != null) {
-					fout.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-				if (in != null) {
-					in.close();
-				}
-			} catch (Exception ex) {
-				// do nothing.
+		try (
+				FileReader fr = new FileReader(csvFile);
+				BufferedReader br = new BufferedReader(fr);
+				FileWriter fileStream = new FileWriter(outFile);
+				BufferedWriter out = new BufferedWriter(fileStream);
+			) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				out.write(line);
+				out.newLine();
 			}
 		}
 
