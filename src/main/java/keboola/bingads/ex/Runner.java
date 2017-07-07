@@ -182,7 +182,8 @@ public class Runner {
 		try {
 			return prepareSlicedTables(results);
 		} catch (Exception e) {
-			System.err.println("Error reading report headedr " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("Error reading report headedr " + e.getMessage());
 			System.exit(2);
 		}
 		return null;
