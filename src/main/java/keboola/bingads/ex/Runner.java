@@ -44,19 +44,15 @@ import keboola.bingads.ex.utils.CsvUtils;
  */
 public class Runner {
 
-		private static Client cl;
-	private static KBCConfig config;
-	private static KBCParameters params;
-	private static String outTablesPath;
-	private static String dataPath;
+		private  Client cl;
+	private  KBCConfig config;
+	private  KBCParameters params;
+	private  String outTablesPath;
+	private  String dataPath;
 
-    public static void main(String[] args) {
-        LogManager.getLogManager().reset();
-        if (args.length == 0) {
-            System.out.print("No parameters provided.");
-            System.exit(1);
-        }
-        dataPath = args[0];
+    public  void run(String dataPath) throws Exception{
+        LogManager.getLogManager().reset();        
+        this.dataPath = dataPath;
         
         initEnvironmentVariables(dataPath);
               
@@ -115,7 +111,7 @@ public class Runner {
 
     }
 
-	private static void getAndStoreAccounts() throws Exception {
+	private  void getAndStoreAccounts() throws Exception {
 		DefaultBeanResultWriter<AccountInfo> accInfoWriter = new DefaultBeanResultWriter<>("accounts.csv", new String[]{"id"});
 		accInfoWriter.initWriter(outTablesPath, AccountInfo.class);
 		List<ResultFileMetadata> res = accInfoWriter.writeAndRetrieveResuts(cl.getAllAccountsInfo());
@@ -133,7 +129,7 @@ public class Runner {
 		
 	}
 
-	private static void downloadReports(Map<String, Date> lastReportRequests, LastState lastState, LastState newState, List<Long> accIds) {
+	private  void downloadReports(Map<String, Date> lastReportRequests, LastState lastState, LastState newState, List<Long> accIds) {
 		List<BReportRequest> repRequests = config.getParams().getReportRequests();
 		Calendar lastSync = null;
 		 Date lastRun = Calendar.getInstance().getTime();
@@ -167,11 +163,12 @@ public class Runner {
 
 	}
 
-	private static String[] downloadAndStoreReportsForAccounts(List<Long> accIds, BReportRequest repReq,
+	private  String[] downloadAndStoreReportsForAccounts(List<Long> accIds, BReportRequest repReq,
 			Calendar lastSync, String resfolder) {
 		ReportResult rResult = null;
 		List<ApiDownloadResult> results = new ArrayList<>();
 		for (Long accId : accIds) {
+			System.out.println("For Account ID" + accId);
 			try {
 				rResult = cl.downloadReport(repReq, resfolder, lastSync, accId);
 				results.add(rResult);
@@ -189,7 +186,7 @@ public class Runner {
 		return null;
 	}
 
-	private static List<Long> loadAccountIds() {
+	private  List<Long> loadAccountIds() {
  		List<Long> accountIds = new ArrayList<>();
         try {
 			accountIds = retrieveAccountIds(cl, params);
@@ -200,13 +197,13 @@ public class Runner {
         return accountIds;
 	}
 
-	private static void setUpClient() {
+	private  void setUpClient() {
 		cl = new Client(config.getOAuthCredentials().getAppKey(), params.getDevKey(),
                 config.getOAuthCredentials().getRefreshToken(), config.getOAuthCredentials().getAppSecret(), "", new Long(1), params.getCustomerId(), params.getAccountId());
 		
 	}
 
-	private static void initEnvironmentVariables(String dataPath) {
+	private  void initEnvironmentVariables(String dataPath) {
 		outTablesPath = dataPath + File.separator + "out" + File.separator + "tables"; //parse config
         
 	       //Parse config file
@@ -218,7 +215,7 @@ public class Runner {
 	        params = config.getParams();		
 	}
 
-	private static void downloadBulkData(Map<String, Date> lastBulkRequests, LastState lastState, LastState newState, List<Long> accIds) {
+	private  void downloadBulkData(Map<String, Date> lastBulkRequests, LastState lastState, LastState newState, List<Long> accIds) {
         Map<String, Boolean> bulkReqestsToDownload = config.getParams().getBulkRequests().getBulkFiles();
         Date lastRun = Calendar.getInstance().getTime();
 
@@ -258,7 +255,7 @@ public class Runner {
 	        }	
 	}
 
-	private static String[] downloadAndStoreBulkForAccounts(List<Long> accIds, Entry<String, Boolean> br, Calendar lastSync, String resFolder) {
+	private  String[] downloadAndStoreBulkForAccounts(List<Long> accIds, Entry<String, Boolean> br, Calendar lastSync, String resFolder) {
 		boolean qScore = false;
 		if (br.getKey().equals("CAMPAIGNS")) {
 			qScore = config.getParams().getBulkRequests().getCampQualityScore();
@@ -268,6 +265,7 @@ public class Runner {
 		}
 		List<ApiDownloadResult> results = new ArrayList<>();
 		for (Long accId : accIds) {
+			System.out.println("For Account ID" + accId);
 			BulkResult res = null;
 			try {
 				res = cl.downloadBulkData(br.getKey(), qScore, false, resFolder, lastSync, accId);
@@ -287,7 +285,7 @@ public class Runner {
 
 	}
 
-	private static String[] prepareSlicedTables(List<ApiDownloadResult> results) throws Exception {
+	private  String[] prepareSlicedTables(List<ApiDownloadResult> results) throws Exception {
 		List<File> resultFiles = new ArrayList<>();
 		List<File> files = new ArrayList<>();
 		
@@ -307,14 +305,14 @@ public class Runner {
 		
 	}
 
-	private static List<Long> retrieveAccountIds(Client cl, KBCParameters params) throws Exception {
+	private  List<Long> retrieveAccountIds(Client cl, KBCParameters params) throws Exception {
 		if(params.getAccountId() != null){
 			return Collections.singletonList(params.getAccountId());
 		}
 		return cl.getAllAccountIds();
 	}
 
-	private static LastState retrieveStateFile(String dataPath) {
+	private  LastState retrieveStateFile(String dataPath) {
 		File stateFile = new File(dataPath + File.separator + "in" + File.separator + "state.json");
         LastState lastState = null;
         if (stateFile.exists()) {
@@ -329,7 +327,7 @@ public class Runner {
         return lastState;
 	}
 
-	private static KBCConfig parseConfigFile(String dataPath) {
+	private  KBCConfig parseConfigFile(String dataPath) {
 		 KBCConfig config = null;
 		 File confFile = new File(dataPath + File.separator + "config.json");
 	        if (!confFile.exists()) {

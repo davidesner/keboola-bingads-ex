@@ -24,7 +24,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>keboola.bingads.ex.Runner</mainClass>                  
+                    <mainClass>keboola.bingads.ex.Main</mainClass>                  
                 </configuration>
             </plugin>
         </plugins>
