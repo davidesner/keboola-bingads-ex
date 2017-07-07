@@ -155,6 +155,8 @@ public class CsvUtils {
 			if (headers == null) {
 				throw new Exception("Error reading csv file header: " + csvFile.getName());
 			}
+		} catch (Exception e) {
+			throw e;
 		}
 		return headers;
 	}
