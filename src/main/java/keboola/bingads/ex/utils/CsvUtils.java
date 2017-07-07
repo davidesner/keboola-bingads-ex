@@ -42,6 +42,7 @@ public class CsvUtils {
 				BufferedWriter out = new BufferedWriter(fileStream);
 			) {
 			String line;
+			br.readLine();
 			while ((line = br.readLine()) != null) {
 				out.write(line);
 				out.newLine();
