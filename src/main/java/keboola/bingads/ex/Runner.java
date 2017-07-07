@@ -302,6 +302,7 @@ public class Runner {
 					CsvUtils.removeHeaderFromCsv(file);					
 				}
 				//in case some files did not contain any data
+				System.out.println("cleaning");
 				CsvUtils.deleteEmptyFiles(files);				
 				return headerCols;
 		
