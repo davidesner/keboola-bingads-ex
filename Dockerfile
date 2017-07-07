@@ -32,4 +32,4 @@ WORKDIR /home
 RUN git clone https://github.com/davidesner/keboola-bingads-ex.git ./  
 RUN mvn compile
 
-ENTRYPOINT mvn -q exec:java -Dexec.args=/data  
+ENTRYPOINT mvn -q -e exec:java -Dexec.args=/data  
