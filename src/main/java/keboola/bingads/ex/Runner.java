@@ -146,6 +146,7 @@ public class Runner {
 			String[] resultHeader = downloadAndStoreReportsForAccounts(accIds, repReq, lastSync, resfolder);			
 
 			// set new state
+			System.out.println("Building manifest files..");
 			newState.getReportRequests().put(repReq.getType().name(), lastRun);
 
 			// bulid manifest file
@@ -177,6 +178,7 @@ public class Runner {
 				System.exit(ex.getSeverity());
 			}
 		}
+		System.out.println("Preparing sliced tables..");
 		try {
 			return prepareSlicedTables(results);
 		} catch (Exception e) {
