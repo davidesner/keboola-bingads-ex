@@ -299,7 +299,7 @@ public class Runner {
 						',', '"', '\\', false, false);
 				// remove headers and create results
 				for (File file : files) {
-					CsvUtils.removeHeaderFromCsv(file);					
+					CsvUtils.removeHeaderFromCsv(file);				
 				}
 				//in case some files did not contain any data
 				System.out.println("cleaning");

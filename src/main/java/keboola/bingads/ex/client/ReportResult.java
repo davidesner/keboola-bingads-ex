@@ -67,9 +67,13 @@ public class ReportResult implements ApiDownloadResult {
             fis = new FileInputStream(resultFile);
             //reader = new BufferedReader(new InputStreamReader(fis));
             //move position 10 lines(info length) to the header
-            for (int i = 0; i < 9; i++) {
-                readLineWithNL(fis);
-            }
+			for (int i = 0; i < 9; i++) {
+
+				char[] l = readLineWithNL(fis);
+				if (i == 2) {
+					System.out.println(l);
+				}
+			}
 
             fout = new FileOutputStream(outFile);
             out = fout.getChannel();
