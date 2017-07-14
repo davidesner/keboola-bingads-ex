@@ -214,7 +214,8 @@
 					"startDate",
 					"reportPeriod",
 					"aggregationPeriod",
-					"columns"
+					"columns",
+					"completeData"
 				]
 			}
 		}
