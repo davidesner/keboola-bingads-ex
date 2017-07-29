@@ -263,7 +263,7 @@ public class Client {
             throw new ClientException("Error downloading report: " + resultFileName + " " + ex);
         } catch (ExecutionException ex) {
             String message = "";
-            Throwable cause = ex.getCause();
+            Throwable cause = getApiFaultDetail(ex);
             if (cause instanceof AdApiFaultDetail_Exception) {
                 AdApiFaultDetail_Exception ee = (AdApiFaultDetail_Exception) cause;
                 message += "The operation failed with the following faults:\n";
@@ -306,7 +306,21 @@ public class Client {
         return res;
     }
 
-    public List<Long> getAllAccountIds() throws Exception {
+    /**
+     * Gets api fault detail  
+     * @return
+     */
+    private Throwable getApiFaultDetail(ExecutionException ex) {
+    	Throwable c = ex;
+    	Throwable prevC = null;
+    	while (!(c == null || c instanceof ApiFaultDetail_Exception || c instanceof AdApiFaultDetail_Exception)){
+    		prevC = c;
+    		c = prevC.getCause();
+    	}
+    	return c;
+	}
+
+	public List<Long> getAllAccountIds() throws Exception {
     	List<Long> accIds = new ArrayList<>();
     	ServiceClient<ICustomerManagementService> cs = new ServiceClient<ICustomerManagementService>(
     			authorizationData, 

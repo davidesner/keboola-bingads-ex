@@ -54,7 +54,8 @@ Then you can authorize with your Microsoft account to retrieve Refresh tokens. T
     -         **siteLinkAddExtensions** – *(REQ)* include dataset in query (true or false) 
     -         **adGroups**	– *(REQ)* include dataset in query (true or false) 
 - **reportRequests** – list of report queries 
-    - **type**	– *(REQ)* type of report request. Supported values: [`AdsPerformance`, `KeywordPerformance`, `AdExtensionDetail`, `AdExtensionByKeyWord`, `AdExtensionByAd`] 
+    - **Report query**	– *(REQ)* type of report request. Supported values: [`AdsPerformance`, `KeywordPerformance`, `AdExtensionDetail`, `AdExtensionByKeyWord`, `AdExtensionByAd`]
+    - **Return complete data only** - Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify. You must set this value to 'No' if you are using report period prefixed by 'This*'
     - **startDate**	– *(REQ)* date from which to retrieve data in format: `dd-mm-yyyy.`	If `sinceLast` is set, his boundary is considered only the first time extractor runs. 
     - **reportPeriod**– *(OPT)* time period of report data (case sensitive). For list of	supported values see	[Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reporttimeperiod.aspx#Values)  ***NOTE:*** If this parameter is set startDate parameter is ignored. 
     - **aggregationPeriod**	– *(OPT)* aggregation level of result data (case sensitive).  For	list of supported values see [Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reportaggregation(v=msads.90).aspx#Values)	. *DEFAULT:* `Daily` (lowest supported) 
