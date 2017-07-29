@@ -2,13 +2,15 @@
  */
 package keboola.bingads.ex.config.pojos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.bingads.reporting.ReportAggregation;
-import com.microsoft.bingads.reporting.ReportTimePeriod;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.microsoft.bingads.reporting.ReportAggregation;
+import com.microsoft.bingads.reporting.ReportTimePeriod;
+
 import keboola.bingads.ex.config.ValidationException;
 
 /**
@@ -59,7 +61,7 @@ public class BReportRequest {
         if (completeData == null) {
             this.completeData = false;
         } else {
-            this.completeData = true;
+            this.completeData = completeData;
         }
         if (aggregationPeriod == null) {
             this.aggregationPeriod = "Daily";
