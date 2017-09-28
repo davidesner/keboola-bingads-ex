@@ -77,7 +77,7 @@ public class ReportRequestFactory {
                 }
 
                 if (!colValidError.equals("")) {
-                    throw new ClientException(colValidError);
+                    throw new ClientException(colValidError, null);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -115,7 +115,7 @@ public class ReportRequestFactory {
                 }
 
                 if (!colValidError.equals("")) {
-                    throw new ClientException(colValidError);
+                    throw new ClientException(colValidError, null);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -154,7 +154,7 @@ public class ReportRequestFactory {
                 }
 
                 if (!colValidError.equals("")) {
-                    throw new ClientException(colValidError);
+                    throw new ClientException(colValidError, null);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -193,7 +193,7 @@ public class ReportRequestFactory {
                 }
 
                 if (!colValidError.equals("")) {
-                    throw new ClientException(colValidError);
+                    throw new ClientException(colValidError, null);
                 }
                 reportReq.setColumns(columns);
                 reportReq.setTime(time);
@@ -233,7 +233,7 @@ public class ReportRequestFactory {
                     }
 
                     if (!colValidError.equals("")) {
-                        throw new ClientException(colValidError);
+                        throw new ClientException(colValidError, null);
                     }
                 }
                 reportReq.setColumns(columns);
@@ -243,11 +243,11 @@ public class ReportRequestFactory {
                 request = reportReq;
             }
         } catch (Exception ex) {
-            throw new ClientException("Unable to proccess request " + br.getType().name() + " " + ex.getMessage());
+            throw new ClientException("Unable to proccess request " + br.getType().name() + " " + ex.getMessage(), ex);
         }
 
         if (request == null) {
-            throw new ClientException(br.getType().name() + " report type is not supported");
+            throw new ClientException(br.getType().name() + " report type is not supported", null);
         }
 
         request.setReturnOnlyCompleteData(br.isCompleteData());

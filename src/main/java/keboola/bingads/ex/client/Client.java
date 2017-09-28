@@ -185,7 +185,7 @@ public class Client {
                     null).get();
 
         } catch (InterruptedException ex) {
-            throw new ClientException("Error downloading bulk data: " + type + " " + ex);
+            throw new ClientException("Error downloading bulk data: " + type + " " + ex, ex);
         } catch (ExecutionException ex) {
         	ex.printStackTrace();
             String message = "";
@@ -215,7 +215,7 @@ public class Client {
             } else {
                 message += ex.getMessage();
             }
-            throw new ClientException("Error downloading report " + message);
+            throw new ClientException("Error downloading report " + message, ex);
 
         }
         BulkResult result;
@@ -223,7 +223,7 @@ public class Client {
             try {
                 result = new BulkResult(resultFile);
             } catch (Exception ex) {
-                throw new ClientException("Error proccessing report query result: " + type + " " + ex.getMessage());
+                throw new ClientException("Error proccessing report query result: " + type + " " + ex.getMessage(), ex);
             }
         } else {
             result = null;
@@ -260,7 +260,7 @@ public class Client {
                     reportingDownloadParameters,
                     null).get();
         } catch (InterruptedException ex) {
-            throw new ClientException("Error downloading report: " + resultFileName + " " + ex);
+            throw new ClientException("Error downloading report: " + resultFileName + " " + ex, ex);
         } catch (ExecutionException ex) {
             String message = "";
             Throwable cause = getApiFaultDetail(ex);
@@ -289,7 +289,7 @@ public class Client {
             } else {
                 message += ex.getMessage();
             }
-            throw new ClientException("Error downloading report " + message);
+            throw new ClientException("Error downloading report " + message, ex);
         }
 
         ReportResult res = null;
@@ -300,7 +300,7 @@ public class Client {
             } catch (ResultException rx) {
                 throw rx;
             } catch (Exception ex) {
-                throw new ClientException("Error proccessing report query result: " + request.getReportName() + " " + ex);
+                throw new ClientException("Error proccessing report query result: " + request.getReportName() + " " + ex, ex);
             }
         }
         return res;

@@ -49,11 +49,12 @@ public class Runner {
 	private  KBCParameters params;
 	private  String outTablesPath;
 	private  String dataPath;
+	private Logger log;
 
     public  void run(String dataPath) throws Exception{
         LogManager.getLogManager().reset();        
         this.dataPath = dataPath;
-        
+        this.log = Logger.getGlobal();
         initEnvironmentVariables(dataPath);
               
         //retrieve stateFile
@@ -65,6 +66,7 @@ public class Runner {
         try {
 			getAndStoreAccounts();
 		} catch (Exception e) {
+			log.log(Level.SEVERE, "Failed to download accounts table!" + e.getMessage(), e);
 			System.err.print("Failed to download accounts table!" + e.getMessage());
 		}
         
@@ -193,6 +195,7 @@ public class Runner {
         try {
 			accountIds = retrieveAccountIds(cl, params);
 		} catch (Exception e) {
+			log.log(Level.SEVERE, "Failed to retrieve accounts!" + e.getMessage(), e);
              System.err.println("Failed to retrieve accounts!" + e.getMessage());
              System.exit(1);
 		}

@@ -129,12 +129,12 @@ public class ReportResult implements ApiDownloadResult {
             f.setLength(lastLength);
             f.close();
         } catch (FileNotFoundException ex) {
-            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2, null);
         } catch (IOException ex) {
         	ex.printStackTrace();
-            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2, null);
         } catch (Exception ex) {
-            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2);
+            throw new ResultException("Unable to proccess final report result data for report " + this.resultFile + " " + ex.getMessage(), 2, null);
         }
 
     }

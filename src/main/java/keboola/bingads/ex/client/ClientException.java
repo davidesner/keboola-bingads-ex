@@ -11,12 +11,12 @@ import keboola.bingads.ex.KBCException;
  */
 public class ClientException extends KBCException {
 
-    public ClientException(String message) {
-        super(message);
+    public ClientException(String message, Exception cause) {
+        super(message, message,  cause);
     }
 
-    public ClientException(String message, int severity) {
-        super(message, severity);
+    public ClientException(String message, int severity, Exception cause) {
+        super(message, severity, cause);
     }
 
 }
