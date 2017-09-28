@@ -176,6 +176,7 @@ public class Runner {
 				rResult = cl.downloadReport(repReq, resfolder, lastSync, accId);
 				results.add(rResult);
 			} catch (ClientException | ResultException ex) {
+				log.log(Level.SEVERE, ex.getMessage(), ex);
 				System.err.println(ex.getMessage());
 				System.exit(ex.getSeverity());
 			}
