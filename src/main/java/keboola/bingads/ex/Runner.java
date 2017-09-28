@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.microsoft.bingads.customermanagement.AccountInfo;
@@ -52,7 +51,7 @@ public class Runner {
 	private Logger log;
 
     public  void run(String dataPath) throws Exception{
-        LogManager.getLogManager().reset();        
+        //LogManager.getLogManager().reset();        
         this.dataPath = dataPath;
         this.log = Logger.getGlobal();
         initEnvironmentVariables(dataPath);
