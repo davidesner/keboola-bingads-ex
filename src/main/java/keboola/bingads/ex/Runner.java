@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.LogManager;
+
+import org.apache.logging.log4j.Logger;
 
 import com.microsoft.bingads.customermanagement.AccountInfo;
 
@@ -51,9 +52,9 @@ public class Runner {
 	private Logger log;
 
     public  void run(String dataPath) throws Exception{
-        //LogManager.getLogManager().reset();        
-        this.dataPath = dataPath;
-        this.log = Logger.getGlobal();
+        LogManager.getLogManager().reset();        
+        this.dataPath = dataPath;        
+        log = org.apache.logging.log4j.LogManager.getLogger();
         initEnvironmentVariables(dataPath);
               
         //retrieve stateFile
@@ -65,7 +66,7 @@ public class Runner {
         try {
 			getAndStoreAccounts();
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Failed to download accounts table!" + e.getMessage(), e);
+			log.error("Failed to download accounts table!" + e.getMessage(), e);
 			System.err.print("Failed to download accounts table!" + e.getMessage());
 		}
         
@@ -175,7 +176,7 @@ public class Runner {
 				rResult = cl.downloadReport(repReq, resfolder, lastSync, accId);
 				results.add(rResult);
 			} catch (ClientException | ResultException ex) {
-				log.log(Level.SEVERE, ex.getMessage(), ex);
+				log.error( ex.getMessage(), ex);
 				System.err.println(ex.getMessage());
 				System.exit(ex.getSeverity());
 			}
@@ -195,7 +196,7 @@ public class Runner {
         try {
 			accountIds = retrieveAccountIds(cl, params);
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Failed to retrieve accounts!" + e.getMessage(), e);
+			log.error( "Failed to retrieve accounts!" + e.getMessage(), e);
              System.err.println("Failed to retrieve accounts!" + e.getMessage());
              System.exit(1);
 		}
@@ -325,7 +326,7 @@ public class Runner {
             try {
                 lastState = (LastState) JsonConfigParser.parseFile(stateFile, LastState.class);
             } catch (IOException ex) {
-                Logger.getLogger(Runner.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex.getMessage(),ex);
             }
         } else {
             System.out.println("State file does not exist. (first run?)");
