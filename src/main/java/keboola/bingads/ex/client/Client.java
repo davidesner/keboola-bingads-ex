@@ -256,7 +256,7 @@ public class Client {
 			try {
 				res = performReportRequest(request, resultFolderPath, resultFileName);
 			} catch (ClientException | ResultException e) {
-				if (retries > numberRetries) {
+				if (retries >= numberRetries) {
 					throw e;
 				}
 				cont = true;
