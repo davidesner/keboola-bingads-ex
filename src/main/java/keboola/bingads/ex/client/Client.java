@@ -47,6 +47,8 @@ public class Client {
     private String DEVELOPER_TOKEN;
     private final OAuthKbcAppCodeGrant oAuthCodeGrant;
     private final AuthorizationData authorizationData;
+    private int numberRetries = 4;
+    private long failoverInterval = 60000;
 
     /**
      *
@@ -73,6 +75,11 @@ public class Client {
 
         this.DEVELOPER_TOKEN = developerToken;
 
+    }
+
+    public void setFailoverParams(int nrRetries, long waitInterval) {
+    	this.numberRetries = nrRetries;
+    	this.failoverInterval = waitInterval;
     }
 
     /**
@@ -114,7 +121,7 @@ public class Client {
 
         ReportRequest r = ReportRequestFactory.createReportRequest(request, accountId, time);
 
-        ReportResult res = performReportRequest(r, resultPath, request.getType().name() + accountId + ".csv");
+        ReportResult res = tryPerformReportRequest(r, resultPath, request.getType().name() + accountId + ".csv");
         res.setLastSync(curr.getTime());
         return res;
     }
@@ -231,6 +238,33 @@ public class Client {
         return result;
     }
 
+    /**
+     * Try request with simple failover strategy
+     * @param request
+     * @param resultFolderPath
+     * @param resultFileName
+     * @return
+     * @throws Exception
+     */
+	public ReportResult tryPerformReportRequest(ReportRequest request, String resultFolderPath, String resultFileName) throws ClientException, ResultException {
+		ReportResult res = null;
+		boolean cont;
+		int retries = 0;
+		do {
+			cont = false;
+			retries++;
+			try {
+				res = performReportRequest(request, resultFolderPath, resultFileName);
+			} catch (ClientException | ResultException e) {
+				if (retries > numberRetries) {
+					throw e;
+				}
+				cont = true;
+				System.out.println("Failed to perform ReportRequest. Retrying for " + retries + ". time.");
+			}
+		} while (cont);
+		return res;
+	}
     /**
      *
      * @param request

@@ -9,12 +9,9 @@
 
  
   <http-conf:conduit 
-           name="*.http-conduit">
-        
-      <http-conf:client ConnectionTimeout="120000"/>
+           name="*.http-conduit">        
+      <http-conf:client ConnectionTimeout="0"/>
   </http-conf:conduit>
-      <bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
-    <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
 
     
 </beans>
