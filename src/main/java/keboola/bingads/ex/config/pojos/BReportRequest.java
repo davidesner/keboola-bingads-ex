@@ -27,6 +27,8 @@ public class BReportRequest {
         AdExtensionByKeyWord,
         AdExtensionByAd
     }
+
+    private static final String CUSTOM_START_DATE_PERIOD = "CustomStartDate";
     private final String type;
     //start date of fetched interval in format: 05-10-2015
     private String startDate;
@@ -57,7 +59,13 @@ public class BReportRequest {
         this.pkey = pkey;
         this.columns = columns;
         this.type = type;
-        this.reportPeriod = reportPeriod;
+        
+        if (CUSTOM_START_DATE_PERIOD.equals(reportPeriod)){
+        	this.reportPeriod = null;
+        } else{
+        	this.reportPeriod = reportPeriod;
+        }
+        
         if (completeData == null) {
             this.completeData = false;
         } else {
