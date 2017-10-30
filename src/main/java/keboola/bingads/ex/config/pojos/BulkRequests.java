@@ -8,7 +8,9 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import keboola.bingads.ex.config.ValidationException;
+import esnerda.keboola.components.configuration.ValidationException;
+
+
 
 /**
  *
@@ -81,7 +83,7 @@ public class BulkRequests {
         }
 
         if (message.length() > l) {
-            throw new ValidationException(message);
+            throw new ValidationException(message, message, null);
         }
         return true;
     }

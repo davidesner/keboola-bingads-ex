@@ -33,7 +33,7 @@ import keboola.bingads.ex.config.pojos.BReportRequest;
  * @author David Esner <esnerda at gmail.com>
  * @created 2016
  */
-public class ReportRequestFactory {
+public class ReportRequestFactoryOld {
 
 //FIXME REFACTOR!! code redundance, unclear, maybe use generics?
 	
@@ -48,7 +48,7 @@ public class ReportRequestFactory {
             sc.setAccountIds(aIds);
 
             //build adExtension
-            if (br.getType() == BReportRequest.reportTypes.AdExtensionByAd) {
+            if (br.getType() == BReportRequest.ReportType.AdExtensionByAd) {
                 AdExtensionByAdReportRequest reportReq = new AdExtensionByAdReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
@@ -86,7 +86,7 @@ public class ReportRequestFactory {
                 request = reportReq;
             }
             //build AdExtensionByKeyWord request
-            if (br.getType() == BReportRequest.reportTypes.AdExtensionByKeyWord) {
+            if (br.getType() == BReportRequest.ReportType.AdExtensionByKeyWord) {
                 AdExtensionByKeywordReportRequest reportReq = new AdExtensionByKeywordReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
@@ -124,7 +124,7 @@ public class ReportRequestFactory {
                 request = reportReq;
             }
             //build AdExtensionDetail request
-            if (br.getType() == BReportRequest.reportTypes.AdExtensionDetail) {
+            if (br.getType() == BReportRequest.ReportType.AdExtensionDetail) {
                 AdExtensionDetailReportRequest reportReq = new AdExtensionDetailReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
@@ -164,7 +164,7 @@ public class ReportRequestFactory {
             }
 
             //build AdsPerformance request
-            if (br.getType() == BReportRequest.reportTypes.AdsPerformance) {
+            if (br.getType() == BReportRequest.ReportType.AdsPerformance) {
                 AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
                 reportReq.setAggregation(NonHourlyReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
@@ -203,7 +203,7 @@ public class ReportRequestFactory {
             }
 
             //build KeywordPerformance request
-            if (br.getType() == BReportRequest.reportTypes.KeywordPerformance) {
+            if (br.getType() == BReportRequest.ReportType.KeywordPerformance) {
                 KeywordPerformanceReportRequest reportReq = new KeywordPerformanceReportRequest();
                 reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey

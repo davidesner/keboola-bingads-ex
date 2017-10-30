@@ -13,6 +13,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import esnerda.keboola.components.configuration.IKBCParameters;
+import esnerda.keboola.components.configuration.ValidationException;
 import keboola.bingads.ex.config.pojos.BReportRequest;
 import keboola.bingads.ex.config.pojos.BulkRequests;
 
@@ -21,7 +23,7 @@ import keboola.bingads.ex.config.pojos.BulkRequests;
  * @author David Esner <esnerda at gmail.com>
  * @created 2015
  */
-public class KBCParameters {
+public class BingParameters  extends IKBCParameters {
     
     private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "bulkRequests"};
     private final Map<String, Object> parametersMap;
@@ -45,16 +47,28 @@ public class KBCParameters {
     private BulkRequests bulkRequests;
     @JsonProperty("reportRequests")
     private List<BReportRequest> reportRequests;
+   
+    //debug params
+    @JsonProperty("debug")
+    private boolean debug;
+    @JsonProperty("deb_username")
+    private String debUserName;
+    @JsonProperty("deb_pass")
+    private String debPass;
+    @JsonProperty("deb_devkey")
+    private String debDevKey;
     
-    public KBCParameters() {
+    public BingParameters() {
         parametersMap = new HashMap<>();
         
     }
     
     @JsonCreator
-    public KBCParameters(@JsonProperty("#devKey") String devKey, @JsonProperty("accountId") Long accountId, @JsonProperty("customerId") Long customerId,
+    public BingParameters(@JsonProperty("#devKey") String devKey, @JsonProperty("accountId") Long accountId, @JsonProperty("customerId") Long customerId,
             @JsonProperty("dateTo") String dateTo, @JsonProperty("sinceLast") Boolean sinceLast, @JsonProperty("dateFrom") String dateFrom, @JsonProperty("bucket") String bucket,
-            @JsonProperty("bulkRequests") BulkRequests bulkRequests, @JsonProperty("reportRequests") List<BReportRequest> reportRequests
+            @JsonProperty("bulkRequests") BulkRequests bulkRequests, @JsonProperty("reportRequests") List<BReportRequest> reportRequests,  
+            @JsonProperty("debug")  boolean debug, @JsonProperty("deb_username") String debUserName, @JsonProperty("deb_pass") String debPass,
+            @JsonProperty ("deb_devkey") String debDevKey
     ) throws ParseException {
         parametersMap = new HashMap<>();
         this.devKey = devKey;
@@ -73,6 +87,10 @@ public class KBCParameters {
         this.reportRequests = reportRequests;
         this.bucket = bucket;
 
+        this.debug = debug;
+        this.debDevKey = debDevKey;
+        this.debUserName = debUserName;
+        this.debPass = debPass;
         //set param map
         parametersMap.put("devKey", devKey);
         parametersMap.put("customerId", customerId);
@@ -176,5 +194,46 @@ public class KBCParameters {
     public List<BReportRequest> getReportRequests() {
         return reportRequests;
     }
+
     
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public String getDebUserName() {
+		return debUserName;
+	}
+
+	public String getDebPass() {
+		return debPass;
+	}
+
+	public String getDebDevKey() {
+		return debDevKey;
+	}
+
+	@Override
+	protected String[] getRequiredFields() {
+		return REQUIRED_FIELDS;
+	}
+
+	@Override
+	protected boolean validateParametres() throws ValidationException {
+		// validate date format
+		String error = "";
+
+		error += this.missingFieldsMessage(parametersMap);
+
+		if (error != "") {
+			if (!getBulkRequests().validate() | !validateReportRequests()) {
+				return false;
+			}
+
+		} else {
+			throw new ValidationException("Invalid configuration parameters!", "Config validation error: " + error,
+					null);
+		}
+		return true;
+	}
+
 }

@@ -8,10 +8,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.bingads.reporting.ReportAggregation;
-import com.microsoft.bingads.reporting.ReportTimePeriod;
+import com.microsoft.bingads.v11.reporting.ReportAggregation;
+import com.microsoft.bingads.v11.reporting.ReportTimePeriod;
 
-import keboola.bingads.ex.config.ValidationException;
+import esnerda.keboola.components.configuration.ValidationException;
+
 
 /**
  *
@@ -20,7 +21,7 @@ import keboola.bingads.ex.config.ValidationException;
  */
 public class BReportRequest {
 
-    public enum reportTypes {
+    public enum ReportType {
         AdsPerformance,
         KeywordPerformance,
         AdExtensionDetail,
@@ -96,7 +97,7 @@ public class BReportRequest {
         if (!isValidType(type)) {
             message += " type parameter: '" + type + "' is invalid, check for supported types! ";
         }
-        if (!isValidPeriod(reportPeriod) && reportPeriod != null) {
+        if (reportPeriod != null && !isValidPeriod(reportPeriod)) {
             message += " reportPeriod parameter: '" + reportPeriod + "' is invalid, check for supported types! ";
         }
         if (!isValidAggregation(aggregationPeriod)) {
@@ -107,13 +108,13 @@ public class BReportRequest {
         }
 
         if (message.length() > l) {
-            throw new ValidationException(message);
+            throw new ValidationException(message, message, null);
         }
         return true;
     }
 
     private boolean isValidType(String type) {
-        for (reportTypes c : reportTypes.values()) {
+        for (ReportType c : ReportType.values()) {
             if (c.name().equals(type)) {
                 return true;
             }
@@ -132,7 +133,7 @@ public class BReportRequest {
 
     private boolean isValidPeriod(String type) {
         try {
-            ReportTimePeriod a = ReportTimePeriod.fromValue(type);
+        	ReportTimePeriod a = ReportTimePeriod.fromValue(type);
             return a != null;
         } catch (Exception ex) {
             return false;
@@ -165,8 +166,8 @@ public class BReportRequest {
         return pkey;
     }
 
-    public reportTypes getType() {
-        for (reportTypes c : reportTypes.values()) {
+    public ReportType getType() {
+        for (ReportType c : ReportType.values()) {
             if (c.name().equals(this.type)) {
                 return c;
             }

@@ -8,11 +8,12 @@ public class Main {
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			System.out.print("No parameters provided.");
+			
 			System.exit(1);
 		}
-		Runner bRunner = new Runner();
+		BingAdsRunner bRunner = new BingAdsRunner(args);
 		try {
-			bRunner.run(args[0]);
+			bRunner.run();
 		} catch (Exception e) {
 			System.out.print("Excecution Failed!");
 			e.printStackTrace();

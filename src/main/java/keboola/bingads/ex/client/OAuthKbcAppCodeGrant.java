@@ -5,7 +5,6 @@ package keboola.bingads.ex.client;
 import com.microsoft.bingads.OAuthTokens;
 import com.microsoft.bingads.internal.LiveComOAuthService;
 import com.microsoft.bingads.internal.OAuthWithAuthorizationCode;
-import java.net.URL;
 
 /**
  *
@@ -14,8 +13,8 @@ import java.net.URL;
  */
 public class OAuthKbcAppCodeGrant extends OAuthWithAuthorizationCode {
 
-    public OAuthKbcAppCodeGrant(String clientId, String clientSecret, String accessToken, String refreshToken, Long expiresIn) {
-        super(clientId, clientSecret, LiveComOAuthService.DESKTOP_REDIRECT_URL, refreshToken);
-        this.oAuthTokens = new OAuthTokens(accessToken, expiresIn, refreshToken);
+    public OAuthKbcAppCodeGrant(String clientId, String clientSecret, OAuthTokens tokens) {
+        super(clientId, clientSecret, LiveComOAuthService.DESKTOP_REDIRECT_URL, tokens.getRefreshToken());
+        this.oAuthTokens = tokens;
     }
 }

@@ -34,12 +34,7 @@
 		<dependency>
 			<groupId>com.microsoft.bingads</groupId>
 			<artifactId>microsoft.bingads</artifactId>
-			<version>10.4.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
-			<version>2.5.4</version>
+			<version>11.5.4</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
@@ -72,6 +67,28 @@
 			<artifactId>log4j-api</artifactId>
 			<version>2.6.2</version>
 			<type>jar</type>
+		</dependency>
+		
+<!-- 	components temp -->
+<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.7.4</version>
 		</dependency>
 	</dependencies>
 </project>
