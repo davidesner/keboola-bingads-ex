@@ -12,10 +12,8 @@ import java.util.Date;
  */
 public interface ApiDownloadResult {
 
-    public Date getLastSync();
+	public Date getLastSync();
 
-    public File getResultFile();
-
-    public void cleanupCSV() throws ResultException;
+	public File getResultFile();
 
 }
