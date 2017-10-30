@@ -11,6 +11,12 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -31,6 +37,11 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>com.github.davidesner</groupId>
+			<artifactId>keboola-components-lib</artifactId>
+			<version>v1.0.6</version>
+		</dependency>
 		<dependency>
 			<groupId>com.microsoft.bingads</groupId>
 			<artifactId>microsoft.bingads</artifactId>
@@ -68,27 +79,8 @@
 			<version>2.6.2</version>
 			<type>jar</type>
 		</dependency>
+
+		<!-- components temp -->
 		
-<!-- 	components temp -->
-<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>2.7.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.7.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.7.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.7.4</version>
-		</dependency>
 	</dependencies>
 </project>
