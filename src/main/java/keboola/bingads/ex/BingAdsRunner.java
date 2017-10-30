@@ -259,7 +259,7 @@ public class BingAdsRunner extends ComponentRunner {
 
 	@Override
 	protected void initWriters() throws Exception {
-		this.accInfoWriter = new DefaultBeanResultWriter<>("accounts.csv", new String[] { "id" });
+		this.accInfoWriter = new DefaultBeanResultWriter<>("accounts.csv", new String[] { "id" }, config.getBucket() + "." + "accounts");
 		accInfoWriter.initWriter(handler.getOutputTablesPath(), AccountInfo.class);
 	}
 
