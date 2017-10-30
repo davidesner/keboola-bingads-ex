@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.github.davidesner</groupId>
 			<artifactId>keboola-components-lib</artifactId>
-			<version>v1.0.6</version>
+			<version>v1.0.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.bingads</groupId>
@@ -81,6 +81,6 @@
 		</dependency>
 
 		<!-- components temp -->
-		
+
 	</dependencies>
 </project>
