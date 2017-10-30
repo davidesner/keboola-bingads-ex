@@ -31,6 +31,6 @@ ENV MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHea
 WORKDIR /home
 RUN git clone --branch update/api-v-11 https://github.com/davidesner/keboola-bingads-ex.git ./  
 
-RUN mvn -q compile
+RUN mvn compile
 
 ENTRYPOINT mvn -q -e exec:java -Dexec.args=/data  
