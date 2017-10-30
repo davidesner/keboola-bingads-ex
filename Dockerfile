@@ -29,7 +29,7 @@ ENV JAVA_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
 ENV MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
 
 WORKDIR /home
-RUN git clone --branch v1.2 https://github.com/davidesner/keboola-bingads-ex.git ./  
+RUN git clone --branch update/api-v-11 https://github.com/davidesner/keboola-bingads-ex.git ./  
 
 RUN mvn compile
 
