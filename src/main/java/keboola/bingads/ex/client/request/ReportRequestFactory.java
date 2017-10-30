@@ -1,5 +1,6 @@
 package keboola.bingads.ex.client.request;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,7 +22,11 @@ public class ReportRequestFactory {
 	public static ReportRequest buildFromConfig(List<Long> accIds, BReportRequest reportReqParams, Calendar lastSync)
 			throws Exception {
 		RequestBuilderProcessor builder = getBuilderByType(reportReqParams.getType());
-		builder.setDefaultCols();
+		if (reportReqParams.getColumns() != null && reportReqParams.getColumns().length != 0) {
+			builder.setCustomColumns(Arrays.asList(reportReqParams.getColumns()));
+		} else {
+			builder.setDefaultCols();
+		}
 		builder.setAggregation(reportReqParams.getAggregationPeriod());
 		builder.setTime(buildTimePeriod(reportReqParams, lastSync));
 		builder.setScopeAcounts(accIds);

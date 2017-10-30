@@ -276,6 +276,6 @@ public class BingAdsRunner extends ComponentRunner {
 
 	@Override
 	protected ManifestFile generateManifestFile(ResultFileMetadata result) throws KBCException {
-		return ManifestFile.Builder.buildDefaultFromResult(result).build();
+		return ManifestFile.Builder.buildDefaultFromResult(result).setColumns(result.getColumns()).build();
 	}
 }
