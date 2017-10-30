@@ -83,14 +83,15 @@ public class BingAdsRunner extends ComponentRunner {
 		/* iterate through all accounts */
 
 		/* Download bulk data */
-		System.out.println("Downloading bulk data...");
+		log.getLogger().info("Downloading bulk data...");
 		results.addAll(downloadBulkData(lastSync, accountIds));
 
-		System.out.println("Downloading report queries...");
+		log.getLogger().info("Downloading report queries...");
 		/* Download reports */
 		results.addAll(downloadReports(lastSync, accountIds));
 
 		finalize(results, lastState);
+		log.getLogger().info("Extraction finished successfully!");
 
 	}
 
@@ -125,16 +126,16 @@ public class BingAdsRunner extends ComponentRunner {
 			String resfolder) throws Exception {
 		ReportResult rResult = null;
 		List<ApiDownloadResult> results = new ArrayList<>();
-		for (Long accId : accIds) {
-			log.getLogger().info("For Account ID" + accId);
-			try {
-				rResult = cl.downloadReport(repReq, resfolder, lastSync, accId);
-				results.add(rResult);
-			} catch (ClientException | ResultException ex) {
-				log.error(ex.getMessage(), ex);
-				System.exit(ex.getSeverity());
-			}
+
+		log.getLogger().info("For Accounts " + accIds);
+		try {
+			rResult = cl.downloadReport(repReq, resfolder, lastSync, accIds);
+			results.add(rResult);
+		} catch (ClientException | ResultException ex) {
+			log.error(ex.getMessage(), ex);
+			System.exit(ex.getSeverity());
 		}
+
 		log.getLogger().info("Preparing sliced tables..");
 		try {
 			return prepareSlicedTables(results);

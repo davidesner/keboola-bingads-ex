@@ -94,12 +94,11 @@ public class Client {
 	 * @return
 	 * @throws Exception
 	 */
-	public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync, long accountId)
+	public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync, List<Long> accountIds)
 			throws Exception {
 
-		ReportRequest r = ReportRequestFactory.buildFromConfig(Collections.singletonList(new Long(accountId)), request,
-				lastSync);
-		ReportResult res = tryPerformReportRequest(r, resultPath, request.getType().name() + accountId + ".csv");
+		ReportRequest r = ReportRequestFactory.buildFromConfig(accountIds, request,	lastSync);
+		ReportResult res = tryPerformReportRequest(r, resultPath, request.getType().name() + ".csv");
 		if (res != null) {
 			res.setLastSync(new Date());
 		}

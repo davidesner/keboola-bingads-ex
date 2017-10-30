@@ -97,7 +97,6 @@ public class BulkResult implements ApiDownloadResult {
         return this.resultFile;
     }
 
-    @Override
     public void cleanupCSV() {
         final String lineSep=System.getProperty("line.separator");
         File file2 = new File(resultFile.getAbsolutePath()+"1.csv");
