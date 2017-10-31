@@ -22,11 +22,22 @@ import esnerda.keboola.components.configuration.ValidationException;
 public class BReportRequest {
 
     public enum ReportType {
-        AdsPerformance,
-        KeywordPerformance,
-        AdExtensionDetail,
-        AdExtensionByKeyWord,
-        AdExtensionByAd
+        AdsPerformance (new String[]{"AccountNumber","AccountId","TimePeriod","CampaignId","AdId","AdGroupId","CurrencyCode","AdDistribution"}),
+        KeywordPerformance (new String[] {"AccountNumber",
+       "AccountId","TimePeriod","CampaignId","AdGroupId","KeywordId","AdId"}),
+        AdExtensionDetail(new String[]{}),
+        AdExtensionByKeyWord(new String[]{}),
+        AdExtensionByAd(new String[]{"TimePeriod","CampaignId","AdGroupId","AdId","DeviceType","DeviceOS","ClickType","AdExtensionId","AdExtensionVersion","AccountNumber","AccountId"});
+        
+        private String[] pKeys;
+    	
+    	private ReportType (String[] pKeys){
+    		this.pKeys = pKeys;
+    	}
+    	
+    	public String[] getPKeys() {
+    		return this.pKeys;
+    	}        
     }
 
     private static final String CUSTOM_START_DATE_PERIOD = "CustomStartDate";

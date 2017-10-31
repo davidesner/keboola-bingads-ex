@@ -76,7 +76,7 @@ public class BingAdsRunner extends ComponentRunner {
 		BingLastState newState = new BingLastState(new Date());
 		Calendar lastSync = null;
 		//last run
-		if(lastState != null && lastState.getLastRun() != null) {
+		if(lastState != null && lastState.getLastRun() != null && config.getSinceLast()) {
 			lastSync.setTime(lastState.getLastRun());
 		}
 
