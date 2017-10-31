@@ -1,4 +1,4 @@
-FROM maven:3.5-jdk-8-alpine   
+FROM maven:3.5.2-jdk-8-alpine   
 MAINTAINER David Esner <esnerda@gmail.com>
 
 ENV APP_VERSION 1.1.0
