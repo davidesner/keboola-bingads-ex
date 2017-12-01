@@ -117,13 +117,15 @@ public class BingParameters  extends IKBCParameters {
         return missing;
     }
     
-    public boolean validateReportRequests() throws ValidationException {
-        boolean res = false;
-        for (BReportRequest r : reportRequests) {
-            res = r.validate();
-        }
-        return res;
-    }
+	public boolean validateReportRequests() throws ValidationException {
+		boolean res = true;
+		for (BReportRequest r : reportRequests) {
+			if (!r.validate()) {
+				res = false;
+			}
+		}
+		return res;
+	}
     
     private void setDate_from(String dateString) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -224,12 +226,12 @@ public class BingParameters  extends IKBCParameters {
 
 		error += this.missingFieldsMessage(parametersMap);
 
-		if (error != "") {
-			if (!getBulkRequests().validate() | !validateReportRequests()) {
-				return false;
-			}
+		if (!getBulkRequests().validate() | !validateReportRequests()) {
+			error += "Bulk or Report parameters are specified incorrectly!";
 
-		} else {
+		}
+
+		if (!"".equals(error)) {
 			throw new ValidationException("Invalid configuration parameters!", "Config validation error: " + error,
 					null);
 		}
