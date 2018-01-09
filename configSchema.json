@@ -157,7 +157,7 @@
 						"propertyOrder": 5000,
 						"type": "string",
 						"title": "Report Period",
-						"description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter)",
+						"description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation" ,
 						"enum": [
 							"CustomStartDate",
 							"LastFourWeeks",
