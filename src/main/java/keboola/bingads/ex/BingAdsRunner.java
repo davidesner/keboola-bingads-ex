@@ -112,12 +112,14 @@ public class BingAdsRunner extends ComponentRunner {
 			}
 
 			String[] resultHeader = downloadAndStoreReportsForAccounts(accIds, repReq, lastSync, resfolder);
-			log.getLogger().info("Building manifest files..");
-			// bulid manifest file
-			// bulid result
-			ResultFileMetadata res = new ResultFileMetadata(new File(resfolder),
-					config.getBucket() + "." + repReq.getType().name().toLowerCase(), repReq.getPkey(), resultHeader);
-			results.add(res);
+			if (resultHeader != null) {
+				log.getLogger().info("Building manifest files..");
+				// bulid manifest file
+				// bulid result
+				ResultFileMetadata res = new ResultFileMetadata(new File(resfolder),
+						config.getBucket() + "." + repReq.getType().name().toLowerCase(), repReq.getPkey(), resultHeader);
+				results.add(res);
+			}
 		}
 		return results;
 	}
@@ -130,7 +132,12 @@ public class BingAdsRunner extends ComponentRunner {
 		log.getLogger().info("For Accounts " + accIds);
 		try {
 			rResult = cl.downloadReport(repReq, resfolder, lastSync, accIds);
-			results.add(rResult);
+			if (rResult == null) {
+				log.warning("No results for report " + repReq.getType() + " in period since: " + repReq.getStartDate(), null);
+			} else {
+				results.add(rResult);
+			}
+
 		} catch (ClientException | ResultException ex) {
 			log.error(ex.getMessage(), ex);
 			System.exit(ex.getSeverity());
@@ -176,11 +183,13 @@ public class BingAdsRunner extends ComponentRunner {
 				continue;
 			}
 			String[] resultHeader = downloadAndStoreBulkForAccounts(accIds, br, lastSync, resfolder);
-			
-			// bulid result
-			ResultFileMetadata res = new ResultFileMetadata(new File(resfolder),
-					config.getBucket() + "." + br.getKey().toLowerCase(), new String[] { "Id" }, resultHeader);
-			results.add(res);
+			if (resultHeader != null) {
+
+				// bulid result
+				ResultFileMetadata res = new ResultFileMetadata(new File(resfolder),
+						config.getBucket() + "." + br.getKey().toLowerCase(), new String[] { "Id" }, resultHeader);
+				results.add(res);
+			}
 		}
 		return results;
 	}
@@ -194,7 +203,11 @@ public class BingAdsRunner extends ComponentRunner {
 			BulkResult res = null;
 			try {
 				res = cl.downloadBulkData(br.getKey(), config.getBulkRequests().getCampQualityScore(), false, resFolder, lastSync, accId);
-				results.add(res);
+				if (res == null) {
+					log.warning("No results for " + br.getKey(), null);
+				} else {
+					results.add(res);
+				}
 			} catch (ClientException ex) {
 				log.error(ex.getMessage(), ex);
 				System.exit(ex.getSeverity());
@@ -215,6 +228,9 @@ public class BingAdsRunner extends ComponentRunner {
 
 		for (ApiDownloadResult rs : results) {
 			files.add(rs.getResultFile());
+		}
+		if (files.isEmpty()) {
+			return null;
 		}
 		// get colums
 		String[] headerCols = CsvUtils.readHeader(files.get(0), ',', '"', '\\', false, false);
