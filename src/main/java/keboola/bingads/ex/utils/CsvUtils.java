@@ -60,6 +60,19 @@ public class CsvUtils {
 		return ((((char) character == '\n') || ((char) character == '\r')));
 	}
 
+	public static void deleteEmptyDirectories(File directory) {
+		File[] subDirs = directory.listFiles(File::isDirectory);
+		for (File f : subDirs) {
+			try {
+				if (isDirEmpty(f)) {
+					f.delete();
+				}
+			} catch (IOException e) {
+				// do nothing, I really dont care here
+			}
+		}
+	}
+
 	public static void deleteEmptyFiles(List<File> files) {
 		for (File f : files) {
 			try {
@@ -82,6 +95,10 @@ public class CsvUtils {
 			if (br != null)
 				br.close();
 		}
+	}
+
+	public static boolean isDirEmpty(File f) throws IOException {
+		return f.listFiles().length == 0;
 	}
 
 	private static char[] readLineWithNL(FileInputStream in) throws IOException {

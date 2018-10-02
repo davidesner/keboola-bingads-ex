@@ -230,18 +230,21 @@ public class BingAdsRunner extends ComponentRunner {
 		for (ApiDownloadResult rs : results) {
 			files.add(rs.getResultFile());
 		}
-		if (files.isEmpty()) {
-			return null;
-		}
-		// get colums
-		String[] headerCols = CsvUtils.readHeader(files.get(0), ',', '"', '\\', false, false);
-		// remove headers and create results
-		for (File file : files) {
-			CsvUtils.removeHeaderFromCsv(file);
+		String[] headerCols = null;
+		if (!files.isEmpty()) {
+		
+			// get colums
+			headerCols = CsvUtils.readHeader(files.get(0), ',', '"', '\\', false, false);
+			// remove headers and create results
+			for (File file : files) {
+				CsvUtils.removeHeaderFromCsv(file);
+			}
 		}
 		// in case some files did not contain any data
 		System.out.println("cleaning");
 		CsvUtils.deleteEmptyFiles(files);
+		CsvUtils.deleteEmptyDirectories(new File(handler.getOutputTablesPath()));
+
 		return headerCols;
 
 	}
