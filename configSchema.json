@@ -14,8 +14,8 @@
 		},
 		"accountId": {
 			"title": "Account ID",
-			"type": "string",
-			"description": "Account identifier."
+			"type": "Number",
+			"description": "Account identifier. If left empty, all available accounts will be retrieved."
 		},
 		"bucket": {
 			"title": "Storage bucket",
