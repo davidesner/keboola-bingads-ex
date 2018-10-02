@@ -51,7 +51,7 @@ public class BingAdsRunner extends ComponentRunner {
 
 	public BingAdsRunner(String[] args) {		
 		log = new DefaultLogger(BingAdsRunner.class);
-		log.info("version: v1.2.1");
+		log.info("version: v1.2.2");
 		log.info("Configuring environment...");
 		handler = initHandler(args, log);
 		config = (BingParameters) handler.getParameters();
