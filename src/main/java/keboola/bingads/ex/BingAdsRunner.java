@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.logging.LogManager;
 
 import com.microsoft.bingads.OAuthTokens;
-import com.microsoft.bingads.v11.customermanagement.AccountInfo;
+import com.microsoft.bingads.v12.customermanagement.AccountInfo;
 
 import esnerda.keboola.components.ComponentRunner;
 import esnerda.keboola.components.KBCException;
@@ -250,15 +250,10 @@ public class BingAdsRunner extends ComponentRunner {
 	}
 
 	private void setUpClient() throws Exception {
-		if (config.isDebug()) {
-			cl = new Client(config.getDebUserName(), config.getDebPass(), config.getCustomerId(),
-					config.getDebDevKey());
-			return;
-		}
 		BingAuthTokens bTokens = handler.getConfig().getAuthParams(BingAuthTokens.class);
 		OAuthTokens tokens = new OAuthTokens(bTokens.getAccess_token(), 1L, bTokens.getRefresh_token());
 		cl = new Client(handler.getOAuthCredentials().getAppKey(), config.getDevKey(),
-				handler.getOAuthCredentials().getAppSecret(), tokens, config.getCustomerId());
+				handler.getOAuthCredentials().getAppSecret(), tokens, config.getCustomerId(), config.isDebug());
 	}
 
 	@Override

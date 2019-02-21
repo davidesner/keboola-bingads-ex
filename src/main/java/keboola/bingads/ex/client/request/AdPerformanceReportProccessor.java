@@ -3,13 +3,13 @@ package keboola.bingads.ex.client.request;
 import java.util.Arrays;
 import java.util.List;
 
-import com.microsoft.bingads.v11.reporting.AccountThroughAdGroupReportScope;
-import com.microsoft.bingads.v11.reporting.AdPerformanceReportColumn;
-import com.microsoft.bingads.v11.reporting.AdPerformanceReportRequest;
-import com.microsoft.bingads.v11.reporting.ArrayOfAdPerformanceReportColumn;
-import com.microsoft.bingads.v11.reporting.ArrayOflong;
-import com.microsoft.bingads.v11.reporting.NonHourlyReportAggregation;
-import com.microsoft.bingads.v11.reporting.ReportTime;
+import com.microsoft.bingads.v12.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.v12.reporting.AdPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.AdPerformanceReportRequest;
+import com.microsoft.bingads.v12.reporting.ArrayOfAdPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.ArrayOflong;
+import com.microsoft.bingads.v12.reporting.ReportAggregation;
+import com.microsoft.bingads.v12.reporting.ReportTime;
 
 /**
  * @author David Esner
@@ -22,7 +22,7 @@ public class AdPerformanceReportProccessor extends RequestBuilderProcessor<AdPer
 
 	@Override
 	void setAggregation(String aggregationPeriod) {
-		reportRequest.setAggregation(NonHourlyReportAggregation.fromValue(aggregationPeriod));
+		reportRequest.setAggregation(ReportAggregation.fromValue(aggregationPeriod));
 	}
 
 	@Override

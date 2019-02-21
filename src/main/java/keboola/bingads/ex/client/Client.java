@@ -15,26 +15,26 @@ import com.microsoft.bingads.AuthorizationData;
 import com.microsoft.bingads.OAuthTokens;
 import com.microsoft.bingads.PasswordAuthentication;
 import com.microsoft.bingads.ServiceClient;
-import com.microsoft.bingads.v11.bulk.ArrayOfDownloadEntity;
-import com.microsoft.bingads.v11.bulk.BulkOperationProgressInfo;
-import com.microsoft.bingads.v11.bulk.BulkServiceManager;
-import com.microsoft.bingads.v11.bulk.DataScope;
-import com.microsoft.bingads.v11.bulk.DownloadEntity;
-import com.microsoft.bingads.v11.bulk.DownloadFileType;
-import com.microsoft.bingads.v11.bulk.DownloadParameters;
-import com.microsoft.bingads.v11.bulk.Progress;
-import com.microsoft.bingads.v11.customermanagement.AccountInfo;
-import com.microsoft.bingads.v11.customermanagement.GetAccountsInfoRequest;
-import com.microsoft.bingads.v11.customermanagement.GetAccountsInfoResponse;
-import com.microsoft.bingads.v11.customermanagement.ICustomerManagementService;
-import com.microsoft.bingads.v11.reporting.AdApiError;
-import com.microsoft.bingads.v11.reporting.AdApiFaultDetail_Exception;
-import com.microsoft.bingads.v11.reporting.ApiFaultDetail_Exception;
-import com.microsoft.bingads.v11.reporting.BatchError;
-import com.microsoft.bingads.v11.reporting.OperationError;
-import com.microsoft.bingads.v11.reporting.ReportRequest;
-import com.microsoft.bingads.v11.reporting.ReportingDownloadParameters;
-import com.microsoft.bingads.v11.reporting.ReportingServiceManager;
+import com.microsoft.bingads.v12.bulk.ArrayOfDownloadEntity;
+import com.microsoft.bingads.v12.bulk.BulkOperationProgressInfo;
+import com.microsoft.bingads.v12.bulk.BulkServiceManager;
+import com.microsoft.bingads.v12.bulk.DataScope;
+import com.microsoft.bingads.v12.bulk.DownloadEntity;
+import com.microsoft.bingads.v12.bulk.DownloadFileType;
+import com.microsoft.bingads.v12.bulk.DownloadParameters;
+import com.microsoft.bingads.v12.bulk.Progress;
+import com.microsoft.bingads.v12.customermanagement.AccountInfo;
+import com.microsoft.bingads.v12.customermanagement.GetAccountsInfoRequest;
+import com.microsoft.bingads.v12.customermanagement.GetAccountsInfoResponse;
+import com.microsoft.bingads.v12.customermanagement.ICustomerManagementService;
+import com.microsoft.bingads.v12.reporting.AdApiError;
+import com.microsoft.bingads.v12.reporting.AdApiFaultDetail_Exception;
+import com.microsoft.bingads.v12.reporting.ApiFaultDetail_Exception;
+import com.microsoft.bingads.v12.reporting.BatchError;
+import com.microsoft.bingads.v12.reporting.OperationError;
+import com.microsoft.bingads.v12.reporting.ReportRequest;
+import com.microsoft.bingads.v12.reporting.ReportingDownloadParameters;
+import com.microsoft.bingads.v12.reporting.ReportingServiceManager;
 
 import keboola.bingads.ex.client.request.ReportRequestFactory;
 import keboola.bingads.ex.config.pojos.BReportRequest;
@@ -57,15 +57,22 @@ public class Client {
 	private BulkServiceManager bulkServiceMgr;
 	private ServiceClient<ICustomerManagementService> custMgmtService;
 
-	public Client(String appKey, String developerToken, String appSecret, OAuthTokens tokens, Long customerId) {
-		oAuthCodeGrant = new OAuthKbcAppCodeGrant(appKey, appSecret, tokens);
+	public Client(String appKey, String developerToken, String appSecret, OAuthTokens tokens,
+			Long customerId, boolean sandbox) {
+		ApiEnvironment env;
+		if (sandbox) {
+			env = ApiEnvironment.SANDBOX;
+		} else {
+			env = ApiEnvironment.PRODUCTION;
+		}
+		oAuthCodeGrant = new OAuthKbcAppCodeGrant(appKey, appSecret, tokens, env);
 		OAuthTokens toks = oAuthCodeGrant.refreshTokensIfNeeded(true);
 		authorizationData = new AuthorizationData();
 		authorizationData.setDeveloperToken(developerToken);
 		authorizationData.setCustomerId(customerId);
 		authorizationData.setAuthentication(oAuthCodeGrant);
 		this.DEVELOPER_TOKEN = developerToken;
-		this.environment = ApiEnvironment.PRODUCTION;
+		this.environment = env;
 	}
 
 	/**
@@ -94,11 +101,12 @@ public class Client {
 	 * @return
 	 * @throws Exception
 	 */
-	public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync, List<Long> accountIds)
-			throws Exception {
+	public ReportResult downloadReport(BReportRequest request, String resultPath, Calendar lastSync,
+			List<Long> accountIds) throws Exception {
 
-		ReportRequest r = ReportRequestFactory.buildFromConfig(accountIds, request,	lastSync);
-		ReportResult res = tryPerformReportRequest(r, resultPath, request.getType().name() + ".csv");
+		ReportRequest r = ReportRequestFactory.buildFromConfig(accountIds, request, lastSync);
+		ReportResult res = tryPerformReportRequest(r, resultPath,
+				request.getType().name() + ".csv");
 		if (res != null) {
 			res.setLastSync(new Date());
 		}
@@ -182,7 +190,9 @@ public class Client {
 			try {
 				result = new BulkResult(resultFile);
 			} catch (Exception ex) {
-				throw new ClientException("Error proccessing report query result: " + type + " " + ex.getMessage(), ex);
+				throw new ClientException(
+						"Error proccessing report query result: " + type + " " + ex.getMessage(),
+						ex);
 			}
 		} else {
 			result = null;
@@ -199,8 +209,8 @@ public class Client {
 	 * @return
 	 * @throws Exception
 	 */
-	public ReportResult tryPerformReportRequest(ReportRequest request, String resultFolderPath, String resultFileName)
-			throws ClientException, ResultException {
+	public ReportResult tryPerformReportRequest(ReportRequest request, String resultFolderPath,
+			String resultFileName) throws ClientException, ResultException {
 		ReportResult res = null;
 		boolean cont;
 		int retries = 0;
@@ -214,7 +224,8 @@ public class Client {
 					throw e;
 				}
 				cont = true;
-				System.out.println("Failed to perform ReportRequest. Retrying for " + retries + ". time.");
+				System.out.println(
+						"Failed to perform ReportRequest. Retrying for " + retries + ". time.");
 			}
 		} while (cont);
 		return res;
@@ -228,8 +239,8 @@ public class Client {
 	 * @return
 	 * @throws ClientException
 	 */
-	public ReportResult performReportRequest(ReportRequest request, String resultFolderPath, String resultFileName)
-			throws ClientException, ResultException {
+	public ReportResult performReportRequest(ReportRequest request, String resultFolderPath,
+			String resultFileName) throws ClientException, ResultException {
 
 		ReportingDownloadParameters reportingDownloadParameters = new ReportingDownloadParameters();
 		reportingDownloadParameters.setReportRequest(request);
@@ -244,7 +255,8 @@ public class Client {
 		File resultFile;
 		try {
 			System.out.println("Downloading report data: " + resultFileName);
-			resultFile = getReportingServiceMgr().downloadFileAsync(reportingDownloadParameters, null).get();
+			resultFile = getReportingServiceMgr()
+					.downloadFileAsync(reportingDownloadParameters, null).get();
 		} catch (InterruptedException ex) {
 			throw new ClientException("Error downloading report: " + resultFileName + " " + ex, ex);
 		} catch (ExecutionException ex) {
@@ -259,8 +271,8 @@ public class Client {
 			} catch (ResultException rx) {
 				throw rx;
 			} catch (Exception ex) {
-				throw new ClientException(
-						"Error proccessing report query result: " + request.getReportName() + " " + ex, ex);
+				throw new ClientException("Error proccessing report query result: "
+						+ request.getReportName() + " " + ex, ex);
 			}
 		}
 		return res;
@@ -275,8 +287,8 @@ public class Client {
 
 			for (AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
 				message += "AdApiError\n";
-				message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n", error.getCode(),
-						error.getErrorCode(), error.getMessage());
+				message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
+						error.getCode(), error.getErrorCode(), error.getMessage());
 			}
 		} else if (cause instanceof ApiFaultDetail_Exception) {
 			ApiFaultDetail_Exception ee = (ApiFaultDetail_Exception) cause;
@@ -284,12 +296,15 @@ public class Client {
 
 			for (BatchError error : ee.getFaultInfo().getBatchErrors().getBatchErrors()) {
 				message += String.format("BatchError at Index: %d\n", error.getIndex());
-				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
+						error.getMessage());
 			}
 
-			for (OperationError error : ee.getFaultInfo().getOperationErrors().getOperationErrors()) {
+			for (OperationError error : ee.getFaultInfo().getOperationErrors()
+					.getOperationErrors()) {
 				message += "OperationError\n";
-				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
+						error.getMessage());
 			}
 		} else {
 			message += ex.getMessage();
@@ -303,29 +318,32 @@ public class Client {
 		ex.printStackTrace();
 		String message = "";
 		Throwable cause = ex.getCause().getCause().getCause();
-		if (cause instanceof com.microsoft.bingads.v11.bulk.AdApiFaultDetail_Exception) {
-			com.microsoft.bingads.v11.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v11.bulk.AdApiFaultDetail_Exception) cause;
+		if (cause instanceof com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception) {
+			com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception) cause;
 			message += "The operation failed with the following faults:\n";
 
-			for (com.microsoft.bingads.v11.bulk.AdApiError error : ee.getFaultInfo().getErrors().getAdApiErrors()) {
+			for (com.microsoft.bingads.v12.bulk.AdApiError error : ee.getFaultInfo().getErrors()
+					.getAdApiErrors()) {
 				message += "AdApiError\n";
-				message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n", error.getCode(),
-						error.getErrorCode(), error.getMessage());
+				message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
+						error.getCode(), error.getErrorCode(), error.getMessage());
 			}
-		} else if (cause instanceof com.microsoft.bingads.v11.bulk.ApiFaultDetail_Exception) {
-			com.microsoft.bingads.v11.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v11.bulk.ApiFaultDetail_Exception) cause;
+		} else if (cause instanceof com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception) {
+			com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception) cause;
 			message += "The operation failed with the following faults:\n";
 
-			for (com.microsoft.bingads.v11.bulk.BatchError error : ee.getFaultInfo().getBatchErrors()
-					.getBatchErrors()) {
+			for (com.microsoft.bingads.v12.bulk.BatchError error : ee.getFaultInfo()
+					.getBatchErrors().getBatchErrors()) {
 				message += String.format("BatchError at Index: %d\n", error.getIndex());
-				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
+						error.getMessage());
 			}
 
-			for (com.microsoft.bingads.v11.bulk.OperationError error : ee.getFaultInfo().getOperationErrors()
-					.getOperationErrors()) {
+			for (com.microsoft.bingads.v12.bulk.OperationError error : ee.getFaultInfo()
+					.getOperationErrors().getOperationErrors()) {
 				message += "OperationError\n";
-				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(), error.getMessage());
+				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
+						error.getMessage());
 			}
 		} else {
 			message += ex.getMessage();
@@ -341,7 +359,8 @@ public class Client {
 	private Throwable getApiFaultDetail(ExecutionException ex) {
 		Throwable c = ex;
 		Throwable prevC = null;
-		while (!(c == null || c instanceof ApiFaultDetail_Exception || c instanceof AdApiFaultDetail_Exception)) {
+		while (!(c == null || c instanceof ApiFaultDetail_Exception
+				|| c instanceof AdApiFaultDetail_Exception)) {
 			prevC = c;
 			c = prevC.getCause();
 		}
@@ -388,8 +407,8 @@ public class Client {
 
 	private ServiceClient<ICustomerManagementService> getcustMgmtkServiceMgr() {
 		if (custMgmtService == null) {
-			this.custMgmtService = new ServiceClient<ICustomerManagementService>(authorizationData, environment,
-					ICustomerManagementService.class);
+			this.custMgmtService = new ServiceClient<ICustomerManagementService>(authorizationData,
+					environment, ICustomerManagementService.class);
 			;
 		}
 		return custMgmtService;
