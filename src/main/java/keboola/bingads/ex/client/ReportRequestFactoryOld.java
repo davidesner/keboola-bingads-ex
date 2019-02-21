@@ -4,27 +4,26 @@ package keboola.bingads.ex.client;
 
 import java.util.Arrays;
 
-import com.microsoft.bingads.reporting.AccountThroughAdGroupReportScope;
-import com.microsoft.bingads.reporting.AdExtensionByAdReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionByAdReportRequest;
-import com.microsoft.bingads.reporting.AdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionByKeywordReportRequest;
-import com.microsoft.bingads.reporting.AdExtensionDetailReportColumn;
-import com.microsoft.bingads.reporting.AdExtensionDetailReportRequest;
-import com.microsoft.bingads.reporting.AdPerformanceReportColumn;
-import com.microsoft.bingads.reporting.AdPerformanceReportRequest;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionByAdReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdExtensionDetailReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfAdPerformanceReportColumn;
-import com.microsoft.bingads.reporting.ArrayOfKeywordPerformanceReportColumn;
-import com.microsoft.bingads.reporting.KeywordPerformanceReportColumn;
-import com.microsoft.bingads.reporting.KeywordPerformanceReportRequest;
-import com.microsoft.bingads.reporting.NonHourlyReportAggregation;
-import com.microsoft.bingads.reporting.ReportAggregation;
-import com.microsoft.bingads.reporting.ReportFormat;
-import com.microsoft.bingads.reporting.ReportRequest;
-import com.microsoft.bingads.reporting.ReportTime;
+import com.microsoft.bingads.v12.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportColumn;
+import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportRequest;
+import com.microsoft.bingads.v12.reporting.AdExtensionByKeywordReportColumn;
+import com.microsoft.bingads.v12.reporting.AdExtensionByKeywordReportRequest;
+import com.microsoft.bingads.v12.reporting.AdExtensionDetailReportColumn;
+import com.microsoft.bingads.v12.reporting.AdExtensionDetailReportRequest;
+import com.microsoft.bingads.v12.reporting.AdPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.AdPerformanceReportRequest;
+import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionByAdReportColumn;
+import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionByKeywordReportColumn;
+import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionDetailReportColumn;
+import com.microsoft.bingads.v12.reporting.ArrayOfAdPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.ArrayOfKeywordPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.KeywordPerformanceReportColumn;
+import com.microsoft.bingads.v12.reporting.KeywordPerformanceReportRequest;
+import com.microsoft.bingads.v12.reporting.ReportAggregation;
+import com.microsoft.bingads.v12.reporting.ReportFormat;
+import com.microsoft.bingads.v12.reporting.ReportRequest;
+import com.microsoft.bingads.v12.reporting.ReportTime;
 
 import keboola.bingads.ex.config.pojos.BReportRequest;
 
@@ -43,7 +42,7 @@ public class ReportRequestFactoryOld {
         //setscope
         try {
             AccountThroughAdGroupReportScope sc = new AccountThroughAdGroupReportScope();
-            com.microsoft.bingads.reporting.ArrayOflong aIds = new com.microsoft.bingads.reporting.ArrayOflong();
+            com.microsoft.bingads.v12.reporting.ArrayOflong aIds = new com.microsoft.bingads.v12.reporting.ArrayOflong();
             aIds.getLongs().add(accountId);
             sc.setAccountIds(aIds);
 
@@ -166,7 +165,7 @@ public class ReportRequestFactoryOld {
             //build AdsPerformance request
             if (br.getType() == BReportRequest.ReportType.AdsPerformance) {
                 AdPerformanceReportRequest reportReq = new AdPerformanceReportRequest();
-                reportReq.setAggregation(NonHourlyReportAggregation.fromValue(br.getAggregationPeriod()));
+                reportReq.setAggregation(ReportAggregation.fromValue(br.getAggregationPeriod()));
                 //validate pkey
                 String colValidError = "";
                 /*if (br.getPkey() != null && br.getPkey().length > 0) {
@@ -221,7 +220,7 @@ public class ReportRequestFactoryOld {
                 ArrayOfKeywordPerformanceReportColumn columns = new ArrayOfKeywordPerformanceReportColumn();
                 if (br.getColumns() == null) {
                     columns.getKeywordPerformanceReportColumns().addAll(Arrays.asList(KeywordPerformanceReportColumn.values()));
-                    columns.getKeywordPerformanceReportColumns().remove(KeywordPerformanceReportColumn.KEYWORD_MATCH_TYPE_ID);
+                    //columns.getKeywordPerformanceReportColumns().remove(KeywordPerformanceReportColumn.KEYWORD_MATCH_TYPE_ID);
                 } else {
 
                     for (String col : br.getColumns()) {

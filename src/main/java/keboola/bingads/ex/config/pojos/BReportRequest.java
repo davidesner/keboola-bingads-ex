@@ -8,8 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.bingads.v11.reporting.ReportAggregation;
-import com.microsoft.bingads.v11.reporting.ReportTimePeriod;
+import com.microsoft.bingads.v12.reporting.ReportAggregation;
+import com.microsoft.bingads.v12.reporting.ReportTimePeriod;
 
 import esnerda.keboola.components.configuration.ValidationException;
 
