@@ -26,7 +26,7 @@ public class OAuthKbcAppCodeGrant extends OAuthWithAuthorizationCode {
 	public static final URL DESKTOP_REDIRECT_URL;
 
 	public OAuthKbcAppCodeGrant(String clientId, String clientSecret, OAuthTokens tokens, ApiEnvironment env) {
-		super(clientId, clientSecret, DESKTOP_REDIRECT_URL, tokens.getRefreshToken(), env);
+		super(clientId, clientSecret, DESKTOP_REDIRECT_URL, tokens.getRefreshToken(), env, false);
 		this.oAuthTokens = tokens;
 	}
 }

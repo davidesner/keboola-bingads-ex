@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import com.microsoft.bingads.v12.reporting.Date;
-import com.microsoft.bingads.v12.reporting.ReportFormat;
-import com.microsoft.bingads.v12.reporting.ReportRequest;
-import com.microsoft.bingads.v12.reporting.ReportTime;
-import com.microsoft.bingads.v12.reporting.ReportTimePeriod;
+import com.microsoft.bingads.v13.reporting.Date;
+import com.microsoft.bingads.v13.reporting.ReportFormat;
+import com.microsoft.bingads.v13.reporting.ReportRequest;
+import com.microsoft.bingads.v13.reporting.ReportTime;
+import com.microsoft.bingads.v13.reporting.ReportTimePeriod;
 
 import keboola.bingads.ex.config.pojos.BReportRequest;
 import keboola.bingads.ex.config.pojos.BReportRequest.ReportType;

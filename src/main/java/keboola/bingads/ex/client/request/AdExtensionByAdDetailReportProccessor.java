@@ -3,13 +3,13 @@ package keboola.bingads.ex.client.request;
 import java.util.Arrays;
 import java.util.List;
 
-import com.microsoft.bingads.v12.reporting.AccountThroughAdGroupReportScope;
-import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportColumn;
-import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportRequest;
-import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionByAdReportColumn;
-import com.microsoft.bingads.v12.reporting.ArrayOflong;
-import com.microsoft.bingads.v12.reporting.ReportAggregation;
-import com.microsoft.bingads.v12.reporting.ReportTime;
+import com.microsoft.bingads.v13.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.v13.reporting.AdExtensionByAdReportColumn;
+import com.microsoft.bingads.v13.reporting.AdExtensionByAdReportRequest;
+import com.microsoft.bingads.v13.reporting.ArrayOfAdExtensionByAdReportColumn;
+import com.microsoft.bingads.v13.reporting.ArrayOflong;
+import com.microsoft.bingads.v13.reporting.ReportAggregation;
+import com.microsoft.bingads.v13.reporting.ReportTime;
 
 /**
  * @author David Esner
