@@ -15,26 +15,26 @@ import com.microsoft.bingads.AuthorizationData;
 import com.microsoft.bingads.OAuthTokens;
 import com.microsoft.bingads.PasswordAuthentication;
 import com.microsoft.bingads.ServiceClient;
-import com.microsoft.bingads.v12.bulk.ArrayOfDownloadEntity;
-import com.microsoft.bingads.v12.bulk.BulkOperationProgressInfo;
-import com.microsoft.bingads.v12.bulk.BulkServiceManager;
-import com.microsoft.bingads.v12.bulk.DataScope;
-import com.microsoft.bingads.v12.bulk.DownloadEntity;
-import com.microsoft.bingads.v12.bulk.DownloadFileType;
-import com.microsoft.bingads.v12.bulk.DownloadParameters;
-import com.microsoft.bingads.v12.bulk.Progress;
-import com.microsoft.bingads.v12.customermanagement.AccountInfo;
-import com.microsoft.bingads.v12.customermanagement.GetAccountsInfoRequest;
-import com.microsoft.bingads.v12.customermanagement.GetAccountsInfoResponse;
-import com.microsoft.bingads.v12.customermanagement.ICustomerManagementService;
-import com.microsoft.bingads.v12.reporting.AdApiError;
-import com.microsoft.bingads.v12.reporting.AdApiFaultDetail_Exception;
-import com.microsoft.bingads.v12.reporting.ApiFaultDetail_Exception;
-import com.microsoft.bingads.v12.reporting.BatchError;
-import com.microsoft.bingads.v12.reporting.OperationError;
-import com.microsoft.bingads.v12.reporting.ReportRequest;
-import com.microsoft.bingads.v12.reporting.ReportingDownloadParameters;
-import com.microsoft.bingads.v12.reporting.ReportingServiceManager;
+import com.microsoft.bingads.v13.bulk.ArrayOfDownloadEntity;
+import com.microsoft.bingads.v13.bulk.BulkOperationProgressInfo;
+import com.microsoft.bingads.v13.bulk.BulkServiceManager;
+import com.microsoft.bingads.v13.bulk.DataScope;
+import com.microsoft.bingads.v13.bulk.DownloadEntity;
+import com.microsoft.bingads.v13.bulk.DownloadFileType;
+import com.microsoft.bingads.v13.bulk.DownloadParameters;
+import com.microsoft.bingads.v13.bulk.Progress;
+import com.microsoft.bingads.v13.customermanagement.AccountInfo;
+import com.microsoft.bingads.v13.customermanagement.GetAccountsInfoRequest;
+import com.microsoft.bingads.v13.customermanagement.GetAccountsInfoResponse;
+import com.microsoft.bingads.v13.customermanagement.ICustomerManagementService;
+import com.microsoft.bingads.v13.reporting.AdApiError;
+import com.microsoft.bingads.v13.reporting.AdApiFaultDetail_Exception;
+import com.microsoft.bingads.v13.reporting.ApiFaultDetail_Exception;
+import com.microsoft.bingads.v13.reporting.BatchError;
+import com.microsoft.bingads.v13.reporting.OperationError;
+import com.microsoft.bingads.v13.reporting.ReportRequest;
+import com.microsoft.bingads.v13.reporting.ReportingDownloadParameters;
+import com.microsoft.bingads.v13.reporting.ReportingServiceManager;
 
 import keboola.bingads.ex.client.request.ReportRequestFactory;
 import keboola.bingads.ex.config.pojos.BReportRequest;
@@ -318,28 +318,28 @@ public class Client {
 		ex.printStackTrace();
 		String message = "";
 		Throwable cause = ex.getCause().getCause().getCause();
-		if (cause instanceof com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception) {
-			com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v12.bulk.AdApiFaultDetail_Exception) cause;
+		if (cause instanceof com.microsoft.bingads.v13.bulk.AdApiFaultDetail_Exception) {
+			com.microsoft.bingads.v13.bulk.AdApiFaultDetail_Exception ee = (com.microsoft.bingads.v13.bulk.AdApiFaultDetail_Exception) cause;
 			message += "The operation failed with the following faults:\n";
 
-			for (com.microsoft.bingads.v12.bulk.AdApiError error : ee.getFaultInfo().getErrors()
+			for (com.microsoft.bingads.v13.bulk.AdApiError error : ee.getFaultInfo().getErrors()
 					.getAdApiErrors()) {
 				message += "AdApiError\n";
 				message += String.format("Code: %d\nError Code: %s\nMessage: %s\n\n",
 						error.getCode(), error.getErrorCode(), error.getMessage());
 			}
-		} else if (cause instanceof com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception) {
-			com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v12.bulk.ApiFaultDetail_Exception) cause;
+		} else if (cause instanceof com.microsoft.bingads.v13.bulk.ApiFaultDetail_Exception) {
+			com.microsoft.bingads.v13.bulk.ApiFaultDetail_Exception ee = (com.microsoft.bingads.v13.bulk.ApiFaultDetail_Exception) cause;
 			message += "The operation failed with the following faults:\n";
 
-			for (com.microsoft.bingads.v12.bulk.BatchError error : ee.getFaultInfo()
+			for (com.microsoft.bingads.v13.bulk.BatchError error : ee.getFaultInfo()
 					.getBatchErrors().getBatchErrors()) {
 				message += String.format("BatchError at Index: %d\n", error.getIndex());
 				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
 						error.getMessage());
 			}
 
-			for (com.microsoft.bingads.v12.bulk.OperationError error : ee.getFaultInfo()
+			for (com.microsoft.bingads.v13.bulk.OperationError error : ee.getFaultInfo()
 					.getOperationErrors().getOperationErrors()) {
 				message += "OperationError\n";
 				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
@@ -367,8 +367,9 @@ public class Client {
 		return c;
 	}
 
-	public List<Long> getAllAccountIds() throws Exception {
+	public List<Long> getAllAccountIds() throws ClientException, Exception {
 		List<Long> accIds = new ArrayList<>();
+		try {		
 		ServiceClient<ICustomerManagementService> cs = getcustMgmtkServiceMgr();
 		GetAccountsInfoRequest params = new GetAccountsInfoRequest();
 		params.setCustomerId(authorizationData.getCustomerId());
@@ -376,7 +377,25 @@ public class Client {
 		for (AccountInfo accInfo : resp.getAccountsInfo().getAccountInfos()) {
 			accIds.add(accInfo.getId());
 		}
+		
+		} catch(com.microsoft.bingads.v13.customermanagement.AdApiFaultDetail_Exception e) {
+			List<com.microsoft.bingads.v13.customermanagement.AdApiError> errs = e.getFaultInfo().getErrors().getAdApiErrors();
+			String errMsg = processAdApiErrors(errs);
+			throw new ClientException("Error downloading accounts " + errMsg, e);
+		}
 		return accIds;
+	}
+	
+	private String processAdApiErrors(List<com.microsoft.bingads.v13.customermanagement.AdApiError> ers) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Errors: \n");
+		for (com.microsoft.bingads.v13.customermanagement.AdApiError err : ers) {
+			sb.append("ErrCode: " + err.getErrorCode());
+			sb.append("ErrMessage: " + err.getMessage());
+			sb.append("ErrDetail: " + err.getDetail());
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	public List<AccountInfo> getAllAccountsInfo() throws Exception {

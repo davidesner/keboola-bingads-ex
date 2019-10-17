@@ -55,7 +55,7 @@ public class BulkRequests {
         this.bulkFiles.put("ADS", ads);
         this.bulkFiles.put("AD_GROUPS", adGroups);
         this.bulkFiles.put("KEYWORDS", keywords);
-        this.bulkFiles.put("SITE_LINKS_AD_EXTENSIONS", siteLinkAddExtensions);
+        this.bulkFiles.put("SITELINK_AD_EXTENSIONS", siteLinkAddExtensions);
 
     }
 

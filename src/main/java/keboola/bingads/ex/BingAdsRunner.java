@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.logging.LogManager;
 
 import com.microsoft.bingads.OAuthTokens;
-import com.microsoft.bingads.v12.customermanagement.AccountInfo;
+import com.microsoft.bingads.v13.customermanagement.AccountInfo;
 
 import esnerda.keboola.components.ComponentRunner;
 import esnerda.keboola.components.KBCException;

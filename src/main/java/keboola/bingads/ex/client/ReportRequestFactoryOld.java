@@ -4,26 +4,26 @@ package keboola.bingads.ex.client;
 
 import java.util.Arrays;
 
-import com.microsoft.bingads.v12.reporting.AccountThroughAdGroupReportScope;
-import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportColumn;
-import com.microsoft.bingads.v12.reporting.AdExtensionByAdReportRequest;
-import com.microsoft.bingads.v12.reporting.AdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.v12.reporting.AdExtensionByKeywordReportRequest;
-import com.microsoft.bingads.v12.reporting.AdExtensionDetailReportColumn;
-import com.microsoft.bingads.v12.reporting.AdExtensionDetailReportRequest;
-import com.microsoft.bingads.v12.reporting.AdPerformanceReportColumn;
-import com.microsoft.bingads.v12.reporting.AdPerformanceReportRequest;
-import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionByAdReportColumn;
-import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionByKeywordReportColumn;
-import com.microsoft.bingads.v12.reporting.ArrayOfAdExtensionDetailReportColumn;
-import com.microsoft.bingads.v12.reporting.ArrayOfAdPerformanceReportColumn;
-import com.microsoft.bingads.v12.reporting.ArrayOfKeywordPerformanceReportColumn;
-import com.microsoft.bingads.v12.reporting.KeywordPerformanceReportColumn;
-import com.microsoft.bingads.v12.reporting.KeywordPerformanceReportRequest;
-import com.microsoft.bingads.v12.reporting.ReportAggregation;
-import com.microsoft.bingads.v12.reporting.ReportFormat;
-import com.microsoft.bingads.v12.reporting.ReportRequest;
-import com.microsoft.bingads.v12.reporting.ReportTime;
+import com.microsoft.bingads.v13.reporting.AccountThroughAdGroupReportScope;
+import com.microsoft.bingads.v13.reporting.AdExtensionByAdReportColumn;
+import com.microsoft.bingads.v13.reporting.AdExtensionByAdReportRequest;
+import com.microsoft.bingads.v13.reporting.AdExtensionByKeywordReportColumn;
+import com.microsoft.bingads.v13.reporting.AdExtensionByKeywordReportRequest;
+import com.microsoft.bingads.v13.reporting.AdExtensionDetailReportColumn;
+import com.microsoft.bingads.v13.reporting.AdExtensionDetailReportRequest;
+import com.microsoft.bingads.v13.reporting.AdPerformanceReportColumn;
+import com.microsoft.bingads.v13.reporting.AdPerformanceReportRequest;
+import com.microsoft.bingads.v13.reporting.ArrayOfAdExtensionByAdReportColumn;
+import com.microsoft.bingads.v13.reporting.ArrayOfAdExtensionByKeywordReportColumn;
+import com.microsoft.bingads.v13.reporting.ArrayOfAdExtensionDetailReportColumn;
+import com.microsoft.bingads.v13.reporting.ArrayOfAdPerformanceReportColumn;
+import com.microsoft.bingads.v13.reporting.ArrayOfKeywordPerformanceReportColumn;
+import com.microsoft.bingads.v13.reporting.KeywordPerformanceReportColumn;
+import com.microsoft.bingads.v13.reporting.KeywordPerformanceReportRequest;
+import com.microsoft.bingads.v13.reporting.ReportAggregation;
+import com.microsoft.bingads.v13.reporting.ReportFormat;
+import com.microsoft.bingads.v13.reporting.ReportRequest;
+import com.microsoft.bingads.v13.reporting.ReportTime;
 
 import keboola.bingads.ex.config.pojos.BReportRequest;
 
@@ -42,7 +42,7 @@ public class ReportRequestFactoryOld {
         //setscope
         try {
             AccountThroughAdGroupReportScope sc = new AccountThroughAdGroupReportScope();
-            com.microsoft.bingads.v12.reporting.ArrayOflong aIds = new com.microsoft.bingads.v12.reporting.ArrayOflong();
+            com.microsoft.bingads.v13.reporting.ArrayOflong aIds = new com.microsoft.bingads.v13.reporting.ArrayOflong();
             aIds.getLongs().add(accountId);
             sc.setAccountIds(aIds);
 

@@ -24,9 +24,11 @@ public class OAuthKbcAppCodeGrant extends OAuthWithAuthorizationCode {
 		}
 	}
 	public static final URL DESKTOP_REDIRECT_URL;
+	private static final long TIME_RESERVE_BEFORE_TOKEN_REFRESH_IN_SECONDS = 60;
 
-	public OAuthKbcAppCodeGrant(String clientId, String clientSecret, OAuthTokens tokens, ApiEnvironment env) {
-		super(clientId, clientSecret, DESKTOP_REDIRECT_URL, tokens.getRefreshToken(), env);
+	public OAuthKbcAppCodeGrant(String clientId, String clientSecret, OAuthTokens tokens,
+			ApiEnvironment env) {
+		super(clientId, clientSecret, DESKTOP_REDIRECT_URL, tokens.getRefreshToken(), env, true);
 		this.oAuthTokens = tokens;
 	}
 }

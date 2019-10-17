@@ -6,9 +6,9 @@ package keboola.bingads.ex.client.request;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import com.microsoft.bingads.v12.reporting.ReportFormat;
-import com.microsoft.bingads.v12.reporting.ReportRequest;
-import com.microsoft.bingads.v12.reporting.ReportTime;
+import com.microsoft.bingads.v13.reporting.ReportFormat;
+import com.microsoft.bingads.v13.reporting.ReportRequest;
+import com.microsoft.bingads.v13.reporting.ReportTime;
 
 public abstract class RequestBuilderProcessor<T extends ReportRequest> {
 
