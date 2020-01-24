@@ -261,7 +261,7 @@ public class Client {
 			throw new ClientException("Error downloading report: " + resultFileName + " " + ex, ex);
 		} catch (ExecutionException ex) {
 			String message = getExecutionExceptionMessage(ex);
-			throw new ClientException("Error downloading report " + message, ex);
+			throw new ClientException("Error downloading report " + message + " " + ex.getMessage(), ex);
 		}
 
 		ReportResult res = null;
