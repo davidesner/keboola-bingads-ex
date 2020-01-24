@@ -80,6 +80,9 @@ public class ReportRequestFactory {
 			return new AdExtensionDetailReportProccessor();
 		case KeywordPerformance:
 			return new KeywordPerformanceReportProccessor();
+		case ShareOfVoice:
+			return new ShareOfVoiceReportProccessor();
+			
 		default:
 			throw new IllegalArgumentException("Unsupported report type " + type.name());
 		}

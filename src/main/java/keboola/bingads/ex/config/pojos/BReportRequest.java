@@ -27,7 +27,8 @@ public class BReportRequest {
        "AccountId","TimePeriod","CampaignId","AdGroupId","KeywordId","AdId"}),
         AdExtensionDetail(new String[]{}),
         AdExtensionByKeyWord(new String[]{}),
-        AdExtensionByAd(new String[]{"TimePeriod","CampaignId","AdGroupId","AdId","DeviceType","DeviceOS","ClickType","AdExtensionId","AdExtensionVersion","AccountNumber","AccountId"});
+        AdExtensionByAd(new String[]{"TimePeriod","CampaignId","AdGroupId","AdId","DeviceType","DeviceOS","ClickType","AdExtensionId","AdExtensionVersion","AccountNumber","AccountId"}),
+    	ShareOfVoice(new String[]{"TimePeriod","CampaignId","AdGroupId","AdId","DeviceType","DeviceOS","ClickType","AdExtensionId","AdExtensionVersion","AccountNumber","AccountId"});
         
         private String[] pKeys;
     	
