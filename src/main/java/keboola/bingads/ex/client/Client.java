@@ -279,7 +279,7 @@ public class Client {
 		return res;
 	}
 
-	private String getExecutionExceptionMessage(ExecutionException ex) {
+	private String getExecutionExceptionMessage(Throwable ex) {
 		String message = "";
 		Throwable cause = getApiFaultDetail(ex);
 		if (cause instanceof AdApiFaultDetail_Exception) {
@@ -307,7 +307,7 @@ public class Client {
 				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
 						error.getMessage());
 			}
-		} else if (cause instanceof ReportingOperationCouldNotBeCompletedException) {
+		} else if (ex instanceof ReportingOperationCouldNotBeCompletedException) {
 			message += "Report execution failed. Please check the specified columns. Some combinations are not possible! For more information, please refer to the documentation.";
 		} else {
 			message += ex.getMessage();
@@ -359,7 +359,7 @@ public class Client {
 	 * 
 	 * @return
 	 */
-	private Throwable getApiFaultDetail(ExecutionException ex) {
+	private Throwable getApiFaultDetail(Throwable ex) {
 		Throwable c = ex;
 		Throwable prevC = null;
 		while (!(c == null || c instanceof ApiFaultDetail_Exception
