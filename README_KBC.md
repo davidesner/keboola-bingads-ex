@@ -23,6 +23,7 @@ specified level of aggregation. Currently supported datasets and their column li
 - **AdExtensionDetail**	*[[AdExtensionDetailReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensiondetailreportcolumn(v=msads.90).aspx)]*
 - **AdExtensionByKeyWord**	*[[AdExtensionByKeywordReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbykeywordreportcolumn(v=msads.90).aspx)]* 
 - **AdExtensionByAd**	*[[AdExtensionByAdReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbyadreportcolumn(v=msads.90).aspx)]*
+- **ShareOfVoice**	*[[ShareOfVoiceReportColumns](https://docs.microsoft.com/en-us/advertising/reporting-service/shareofvoicereportcolumn?view=bingads-13)]*
 
 For each report user can specify aggregation level, report period and column set to be retrieved. By default the aggregation level is *DAILY* and all columns are retrieved.
 
@@ -54,13 +55,13 @@ Then you can authorize with your Microsoft account to retrieve Refresh tokens. T
     -         **siteLinkAddExtensions** – *(REQ)* include dataset in query (true or false) 
     -         **adGroups**	– *(REQ)* include dataset in query (true or false) 
 - **reportRequests** – list of report queries 
-    - **Report query**	– *(REQ)* type of report request. Supported values: [`AdsPerformance`, `KeywordPerformance`, `AdExtensionDetail`, `AdExtensionByKeyWord`, `AdExtensionByAd`]
+    - **Report query**	– *(REQ)* type of report request. Supported values: [`AdsPerformance`, `KeywordPerformance`, `AdExtensionDetail`, `AdExtensionByKeyWord`, `AdExtensionByAd`, `ShareOfVoice`]
     - **Return complete data only** - Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify. You must set this value to 'No' if you are using report period prefixed by 'This*'
     - **startDate**	– *(REQ)* date from which to retrieve data in format: `dd-mm-yyyy.`	If `sinceLast` is set, his boundary is considered only the first time extractor runs. 
     - **reportPeriod**– *(OPT)* time period of report data (case sensitive). For list of	supported values see	[Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reporttimeperiod.aspx#Values)  ***NOTE:*** If this parameter is set startDate parameter is ignored. If you are reporting on multiple accounts the timezone considered may differ from what you expect see [Values](https://docs.microsoft.com/en-us/bingads/guides/reports#aggregation-time#Values)
     - **aggregationPeriod**	– *(OPT)* aggregation level of result data (case sensitive).  For	list of supported values see [Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reportaggregation(v=msads.90).aspx#Values)	. *DEFAULT:* `Daily` (lowest supported) 
     - **incremental**	– *(OPT)* upload incrementally. *DEFAULT*: FALSE 
-    - **columns**	– *(OPT)* list of supported columns according to report type. 
+    - **columns**	– *(OPT)* list of supported columns according to report type. Please note that some columns are required and some column combinations are not allowed, depending on the report type.
 		 
 
 ### Sample configurations / use cases

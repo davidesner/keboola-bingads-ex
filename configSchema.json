@@ -1,232 +1,232 @@
 {
-	"title": "BingAds extractor configuration",
-	"type": "object",
-	"properties": {
-		"#devKey": {
-			"title": "Developer Token",
-			"type": "string",
-			"description": "Your developer token"
-		},
-		"customerId": {
-			"title": "Customer ID",
-			"type": "string",
-			"description": "Customer identifier of your BingAds account."
-		},
-		"accountId": {
-			"title": "Account ID",
-			"type": "Number",
-			"description": "Account identifier. If left empty, all available accounts will be retrieved."
-		},
-		"bucket": {
-			"title": "Storage bucket",
-			"type": "string",
-			"description": "Storage bucket where the result will be uploaded. (i.e. in.c-bing-ex)"
-		},
-		"sinceLast": {
-			"type": "boolean",
-			"description": "Continue download from last state (retrieves data since last download was perfomed)",
-			"default": true
-		},
-		"bulkRequests": {
-			"title": "Bulk Request Objects",
-			"type": "object",
-			"format": "table",
-			"uniqueItems": true,
-			"description": "List of datasets to retrieve from Bulk Service",
-			"properties": {
-				"ads": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Ads",
-					"default": true
-				},
-				"adGroups": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Ad Groups",
-					"default": true
-				},
-				"campaigns": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Campaigns",
-					"default": true
-				},
-				"keywords": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Keywords",
-					"default": true
-				},
-				"campQualityScore": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Campaign Quality Score",
-					"default": true
-				},
-				"siteLinkAddExtensions": {
-					"type": "boolean",
-					"format": "checkbox",
-					"title": "Site Link Add-Extensions",
-					"default": true
-				}
-			},
-			"required": [
-				"ads",
-				"adGroups",
-				"campaigns",
-				"keywords",
-				"campQualityScore",
-				"siteLinkAddExtensions"
-			]
-		},
-		"reportRequests": {
-			"type": "array",
-			"title": "Performance data datasets",
-			"description": "List of datasets retrieved from Reporting Service",
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"title": "Report",
-				"properties": {
-					"type": {
-						"propertyOrder": 1000,
-						"type": "string",
-						"title": "Report query",
-						"enum": [
-							"AdsPerformance",
-							"KeywordPerformance",
-							"AdExtensionDetail",
-							"AdExtensionByKeyWord",
-							"AdExtensionByAd"
-						]
-					},
-					"completeData": {
-						"propertyOrder": 1000,
-						"title": "Return complete data only",
-						"description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
-						"type": "boolean",
-						"enum": [
-							true,
-							false
-						],
-						"default": false,
-						"options": {
-							"enum_titles": [
-								"Yes",
-								"No"
-							]
-						}
-					},
-					"incremental": {
-						"propertyOrder": 2000,
-						"title": "Storage upload mode",
-						"description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
-						"type": "boolean",
-						"enum": [
-							false,
-							true
-						],
-						"default": false,
-						"options": {
-							"enum_titles": [
-								"Full",
-								"Incremental"
-							]
-						}
-					},
-					"pkey": {
-						"title": "Pkeys",
-						"type": "array",
-						"description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
-						"propertyOrder": 3000,
-						"items": {
-							"title": "Pkey",
-							"type": "string"
-						},
-						"default": null,
-						"uniqueItems": true
-					},
-					"startDate": {
-						"propertyOrder": 4000,
-						"type": "string",
-						"title": "Start Date",
-						"description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs."
-					},
-					"reportPeriod": {
-						"propertyOrder": 5000,
-						"type": "string",
-						"title": "Report Period",
-						"description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation" ,
-						"enum": [
-							"CustomStartDate",
-							"LastFourWeeks",
-							"LastMonth",
-							"LastSevenDays",
-							"LastSixMonths",
-							"LastThreeMonths",
-							"LastWeek",
-							"LastYear",
-							"ThisMonth",
-							"ThisWeek",
-							"ThisYear",
-							"Today",
-							"Yesterday"
-						],
-						"default": "CustomStartDate"
-					},
-					"aggregationPeriod": {
-						"propertyOrder": 6000,
-						"type": "string",
-						"title": "Aggregation Period",
-						"description": "Aggregation level of result data",
-						"enum": [
-							"Daily",
-							"DayOfWeek",
-							"Hourly",
-							"HourOfDay",
-							"Monthly",
-							"Summary",
-							"Weekly",
-							"Yearly"
-						],
-						"default": "Daily"
-					},
-					"columns": {
-						"propertyOrder": 7000,
-						"title": "Columns",
-						"description": "List of supported columns according to report type",
-						"type": [
-							"array",
-							"null"
-						],
-						"uniqueItems": true,
-						"items": {
-							"title": "Column",
-							"type": "string"
-						}
-					}
-				},
-				"required": [
-					"type",
-					"incremental",
-					"pkey",
-					"startDate",
-					"reportPeriod",
-					"aggregationPeriod",
-					"columns",
-					"completeData"
-				]
-			}
-		}
-	},
-	"required": [
-		"#devKey",
-		"customerId",
-		"accountId",
-		"bucket",
-		"sinceLast",
-		"bulkRequests",
-		"reportRequests"
-	]
+  "type": "object",
+  "title": "BingAds extractor configuration",
+  "required": [
+    "#devKey",
+    "customerId",
+    "accountId",
+    "bucket",
+    "sinceLast",
+    "bulkRequests",
+    "reportRequests"
+  ],
+  "properties": {
+    "bucket": {
+      "type": "string",
+      "title": "Storage bucket",
+      "description": "Storage bucket where the result will be uploaded. (i.e. in.c-bing-ex)"
+    },
+    "#devKey": {
+      "type": "string",
+      "title": "Developer Token",
+      "description": "Your developer token"
+    },
+    "accountId": {
+      "type": "string",
+      "title": "Account ID",
+      "description": "Account identifier."
+    },
+    "sinceLast": {
+      "type": "boolean",
+      "default": true,
+      "description": "Continue download from last state (retrieves data since last download was perfomed)"
+    },
+    "customerId": {
+      "type": "string",
+      "title": "Customer ID",
+      "description": "Customer identifier of your BingAds account."
+    },
+    "bulkRequests": {
+      "type": "object",
+      "title": "Bulk Request Objects",
+      "format": "table",
+      "required": [
+        "ads",
+        "adGroups",
+        "campaigns",
+        "keywords",
+        "campQualityScore",
+        "siteLinkAddExtensions"
+      ],
+      "properties": {
+        "ads": {
+          "type": "boolean",
+          "title": "Ads",
+          "format": "checkbox",
+          "default": true
+        },
+        "adGroups": {
+          "type": "boolean",
+          "title": "Ad Groups",
+          "format": "checkbox",
+          "default": true
+        },
+        "keywords": {
+          "type": "boolean",
+          "title": "Keywords",
+          "format": "checkbox",
+          "default": true
+        },
+        "campaigns": {
+          "type": "boolean",
+          "title": "Campaigns",
+          "format": "checkbox",
+          "default": true
+        },
+        "campQualityScore": {
+          "type": "boolean",
+          "title": "Campaign Quality Score",
+          "format": "checkbox",
+          "default": true
+        },
+        "siteLinkAddExtensions": {
+          "type": "boolean",
+          "title": "Site Link Add-Extensions",
+          "format": "checkbox",
+          "default": true
+        }
+      },
+      "description": "List of datasets to retrieve from Bulk Service",
+      "uniqueItems": true
+    },
+    "reportRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Report",
+        "required": [
+          "type",
+          "incremental",
+          "pkey",
+          "startDate",
+          "reportPeriod",
+          "aggregationPeriod",
+          "columns",
+          "completeData"
+        ],
+        "properties": {
+          "pkey": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "title": "Pkey"
+            },
+            "title": "Pkeys",
+            "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+            "uniqueItems": true,
+            "propertyOrder": 3000
+          },
+          "type": {
+            "enum": [
+              "AdsPerformance",
+              "KeywordPerformance",
+              "AdExtensionDetail",
+              "AdExtensionByKeyWord",
+              "AdExtensionByAd",
+              "ShareOfVoice"
+            ],
+            "type": "string",
+            "title": "Report query",
+            "propertyOrder": 1000
+          },
+          "columns": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "title": "Column"
+            },
+            "title": "Columns",
+            "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+            "uniqueItems": true,
+            "propertyOrder": 7000
+          },
+          "startDate": {
+            "type": "string",
+            "title": "Start Date",
+            "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+            "propertyOrder": 4000
+          },
+          "incremental": {
+            "enum": [
+              false,
+              true
+            ],
+            "type": "boolean",
+            "title": "Storage upload mode",
+            "default": false,
+            "options": {
+              "enum_titles": [
+                "Full",
+                "Incremental"
+              ]
+            },
+            "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+            "propertyOrder": 2000
+          },
+          "completeData": {
+            "enum": [
+              true,
+              false
+            ],
+            "type": "boolean",
+            "title": "Return complete data only",
+            "default": false,
+            "options": {
+              "enum_titles": [
+                "Yes",
+                "No"
+              ]
+            },
+            "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+            "propertyOrder": 1000
+          },
+          "reportPeriod": {
+            "enum": [
+              "CustomStartDate",
+              "LastFourWeeks",
+              "LastMonth",
+              "LastSevenDays",
+              "LastSixMonths",
+              "LastThreeMonths",
+              "LastWeek",
+              "LastYear",
+              "ThisMonth",
+              "ThisWeek",
+              "ThisYear",
+              "Today",
+              "Yesterday"
+            ],
+            "type": "string",
+            "title": "Report Period",
+            "default": "CustomStartDate",
+            "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+            "propertyOrder": 5000
+          },
+          "aggregationPeriod": {
+            "enum": [
+              "Daily",
+              "DayOfWeek",
+              "Hourly",
+              "HourOfDay",
+              "Monthly",
+              "Summary",
+              "Weekly",
+              "Yearly"
+            ],
+            "type": "string",
+            "title": "Aggregation Period",
+            "default": "Daily",
+            "description": "Aggregation level of result data",
+            "propertyOrder": 6000
+          }
+        }
+      },
+      "title": "Performance data datasets",
+      "description": "List of datasets retrieved from Reporting Service",
+      "uniqueItems": true
+    }
+  }
 }

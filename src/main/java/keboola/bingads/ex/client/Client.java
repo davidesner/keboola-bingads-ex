@@ -34,6 +34,7 @@ import com.microsoft.bingads.v13.reporting.BatchError;
 import com.microsoft.bingads.v13.reporting.OperationError;
 import com.microsoft.bingads.v13.reporting.ReportRequest;
 import com.microsoft.bingads.v13.reporting.ReportingDownloadParameters;
+import com.microsoft.bingads.v13.reporting.ReportingOperationCouldNotBeCompletedException;
 import com.microsoft.bingads.v13.reporting.ReportingServiceManager;
 
 import keboola.bingads.ex.client.request.ReportRequestFactory;
@@ -278,7 +279,7 @@ public class Client {
 		return res;
 	}
 
-	private String getExecutionExceptionMessage(ExecutionException ex) {
+	private String getExecutionExceptionMessage(Throwable ex) {
 		String message = "";
 		Throwable cause = getApiFaultDetail(ex);
 		if (cause instanceof AdApiFaultDetail_Exception) {
@@ -306,6 +307,8 @@ public class Client {
 				message += String.format("Code: %d\nMessage: %s\n\n", error.getCode(),
 						error.getMessage());
 			}
+		} else if (ex instanceof ReportingOperationCouldNotBeCompletedException) {
+			message += "Report execution failed. Please check the specified columns. Some combinations are not possible! For more information, please refer to the documentation.";
 		} else {
 			message += ex.getMessage();
 		}
@@ -356,7 +359,7 @@ public class Client {
 	 * 
 	 * @return
 	 */
-	private Throwable getApiFaultDetail(ExecutionException ex) {
+	private Throwable getApiFaultDetail(Throwable ex) {
 		Throwable c = ex;
 		Throwable prevC = null;
 		while (!(c == null || c instanceof ApiFaultDetail_Exception
@@ -369,24 +372,26 @@ public class Client {
 
 	public List<Long> getAllAccountIds() throws ClientException, Exception {
 		List<Long> accIds = new ArrayList<>();
-		try {		
-		ServiceClient<ICustomerManagementService> cs = getcustMgmtkServiceMgr();
-		GetAccountsInfoRequest params = new GetAccountsInfoRequest();
-		params.setCustomerId(authorizationData.getCustomerId());
-		GetAccountsInfoResponse resp = cs.getService().getAccountsInfo(params);
-		for (AccountInfo accInfo : resp.getAccountsInfo().getAccountInfos()) {
-			accIds.add(accInfo.getId());
-		}
-		
-		} catch(com.microsoft.bingads.v13.customermanagement.AdApiFaultDetail_Exception e) {
-			List<com.microsoft.bingads.v13.customermanagement.AdApiError> errs = e.getFaultInfo().getErrors().getAdApiErrors();
+		try {
+			ServiceClient<ICustomerManagementService> cs = getcustMgmtkServiceMgr();
+			GetAccountsInfoRequest params = new GetAccountsInfoRequest();
+			params.setCustomerId(authorizationData.getCustomerId());
+			GetAccountsInfoResponse resp = cs.getService().getAccountsInfo(params);
+			for (AccountInfo accInfo : resp.getAccountsInfo().getAccountInfos()) {
+				accIds.add(accInfo.getId());
+			}
+
+		} catch (com.microsoft.bingads.v13.customermanagement.AdApiFaultDetail_Exception e) {
+			List<com.microsoft.bingads.v13.customermanagement.AdApiError> errs = e.getFaultInfo()
+					.getErrors().getAdApiErrors();
 			String errMsg = processAdApiErrors(errs);
 			throw new ClientException("Error downloading accounts " + errMsg, e);
 		}
 		return accIds;
 	}
-	
-	private String processAdApiErrors(List<com.microsoft.bingads.v13.customermanagement.AdApiError> ers) {
+
+	private String processAdApiErrors(
+			List<com.microsoft.bingads.v13.customermanagement.AdApiError> ers) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Errors: \n");
 		for (com.microsoft.bingads.v13.customermanagement.AdApiError err : ers) {
