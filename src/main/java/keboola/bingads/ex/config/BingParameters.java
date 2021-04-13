@@ -25,7 +25,7 @@ import keboola.bingads.ex.config.pojos.BulkRequests;
  */
 public class BingParameters  extends IKBCParameters {
     
-    private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "bulkRequests", "accountId"};
+    private final static String[] REQUIRED_FIELDS = {"devKey", "bucket", "customerId", "bulkRequests"};
     private final Map<String, Object> parametersMap;
     private Date date_from;
     

@@ -24,8 +24,7 @@
     "accountId": {
       "type": "string",
       "title": "Account ID",
-      "description": "Account identifier.",
-      "minLength":2
+      "description": "Account identifier. (if left empty, all accounts are downloaded)"
     },
     "sinceLast": {
       "type": "boolean",
