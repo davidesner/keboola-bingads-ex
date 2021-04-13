@@ -66,7 +66,17 @@ Then you can authorize with your Microsoft account to retrieve Refresh tokens. T
     - **columns**	– *(OPT)* list of supported columns according to report type. Please note that some columns are required and some column combinations are not allowed, depending on the report type.
 		 
 
-### Sample configurations / use cases
+## Reports
+
+### CampaignPerformance Reports
+
+**Column limitation**
+
+If you include any of the AudienceImpressionLostToBudgetPercent, AudienceImpressionLostToRankPercent, AudienceImpressionSharePercent, or RelativeCtr columns, then you must exclude the CustomerId, CustomerName, and DeliveredMatchType attribute columns, and vice versa.
+
+**NOTE** By default the CustomerId, CustomerName, and DeliveredMatchType are excluded if not specified otherwise in the explicit column list.
+
+## Sample configurations / use cases
 
 #### Use case 1
 

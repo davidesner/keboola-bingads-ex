@@ -14,10 +14,12 @@ import com.microsoft.bingads.v13.reporting.ReportTime;
 /**
  * @author David Esner
  */
-public class CampaignReportProccessor extends RequestBuilderProcessor<CampaignPerformanceReportRequest> {
+public class CampaignReportProccessor
+		extends RequestBuilderProcessor<CampaignPerformanceReportRequest> {
 
 	public CampaignReportProccessor() throws Exception {
 		super(CampaignPerformanceReportRequest.class);
+
 	}
 
 	@Override
@@ -33,7 +35,18 @@ public class CampaignReportProccessor extends RequestBuilderProcessor<CampaignPe
 	@Override
 	void setDefaultCols() {
 		ArrayOfCampaignPerformanceReportColumn columns = new ArrayOfCampaignPerformanceReportColumn();
-		columns.getCampaignPerformanceReportColumns().addAll(Arrays.asList(CampaignPerformanceReportColumn.values()));
+		columns.getCampaignPerformanceReportColumns()
+				.addAll(Arrays.asList(CampaignPerformanceReportColumn.values()));
+		// to keep the
+		// "AudienceImpressionLostToBudgetPercent","AudienceImpressionLostToRankPercent",
+		// "AudienceImpressionSharePercent","RelativeCtr
+		// values by default
+		columns.getCampaignPerformanceReportColumns()
+				.remove(CampaignPerformanceReportColumn.CUSTOMER_ID);
+		columns.getCampaignPerformanceReportColumns()
+				.remove(CampaignPerformanceReportColumn.CUSTOMER_NAME);
+		columns.getCampaignPerformanceReportColumns()
+				.remove(CampaignPerformanceReportColumn.DELIVERED_MATCH_TYPE);
 		reportRequest.setColumns(columns);
 	}
 
@@ -42,10 +55,11 @@ public class CampaignReportProccessor extends RequestBuilderProcessor<CampaignPe
 		ArrayOfCampaignPerformanceReportColumn columns = new ArrayOfCampaignPerformanceReportColumn();
 		for (String col : colNames) {
 			try {
-				columns.getCampaignPerformanceReportColumns().add(CampaignPerformanceReportColumn.fromValue(col));
+				columns.getCampaignPerformanceReportColumns()
+						.add(CampaignPerformanceReportColumn.fromValue(col));
 			} catch (IllegalArgumentException ex) {
-				throw new Exception("Unable to proccess request " + reportRequest.getReportName() + ". '" + col
-						+ "' is not a valid column name, check request specs.\n");
+				throw new Exception("Unable to proccess request " + reportRequest.getReportName()
+						+ ". '" + col + "' is not a valid column name, check request specs.\n");
 			}
 		}
 		reportRequest.setColumns(columns);
