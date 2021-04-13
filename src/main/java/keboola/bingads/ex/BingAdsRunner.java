@@ -265,7 +265,6 @@ public class BingAdsRunner extends ComponentRunner {
 			handler.processConfigFile(args);
 		} catch (KBCException ex) {
 			log.error(ex.getMessage(), ex);
-			handleException(ex);
 			System.exit(1);
 		}
 		setHandler(handler);
