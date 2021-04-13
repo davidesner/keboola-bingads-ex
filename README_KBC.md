@@ -20,10 +20,12 @@ specified level of aggregation. Currently supported datasets and their column li
 
 - **AdsPerformance**	*[[AdPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adperformancereportcolumn(v=msads.90).aspx)]*
 - **KeywordPerformance**	 *[[KeywordPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-keywordperformancereportcolumn(v=msads.90).aspx)]*
+- **CampaignPerformance**	 *[[CampaignPerformanceColumns](https://docs.microsoft.com/en-us/advertising/reporting-service/campaignperformancereportcolumn)]*
 - **AdExtensionDetail**	*[[AdExtensionDetailReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensiondetailreportcolumn(v=msads.90).aspx)]*
 - **AdExtensionByKeyWord**	*[[AdExtensionByKeywordReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbykeywordreportcolumn(v=msads.90).aspx)]* 
 - **AdExtensionByAd**	*[[AdExtensionByAdReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbyadreportcolumn(v=msads.90).aspx)]*
 - **ShareOfVoice**	*[[ShareOfVoiceReportColumns](https://docs.microsoft.com/en-us/advertising/reporting-service/shareofvoicereportcolumn?view=bingads-13)]*
+
 
 For each report user can specify aggregation level, report period and column set to be retrieved. By default the aggregation level is *DAILY* and all columns are retrieved.
 
