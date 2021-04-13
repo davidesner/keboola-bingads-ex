@@ -24,7 +24,8 @@
     "accountId": {
       "type": "string",
       "title": "Account ID",
-      "description": "Account identifier."
+      "description": "Account identifier.",
+      "minLength":2
     },
     "sinceLast": {
       "type": "boolean",
@@ -34,7 +35,8 @@
     "customerId": {
       "type": "string",
       "title": "Customer ID",
-      "description": "Customer identifier of your BingAds account."
+      "description": "Customer identifier of your BingAds account.",
+      "minLength":2
     },
     "bulkRequests": {
       "type": "object",
@@ -120,6 +122,7 @@
             "enum": [
               "AdsPerformance",
               "KeywordPerformance",
+              "CampaignPerformance",
               "AdExtensionDetail",
               "AdExtensionByKeyWord",
               "AdExtensionByAd",
