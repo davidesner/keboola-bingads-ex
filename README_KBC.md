@@ -63,7 +63,7 @@ Then you can authorize with your Microsoft account to retrieve Refresh tokens. T
     - **reportPeriod**– *(OPT)* time period of report data (case sensitive). For list of	supported values see	[Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reporttimeperiod.aspx#Values)  ***NOTE:*** If this parameter is set startDate parameter is ignored. If you are reporting on multiple accounts the timezone considered may differ from what you expect see [Values](https://docs.microsoft.com/en-us/bingads/guides/reports#aggregation-time#Values)
     - **aggregationPeriod**	– *(OPT)* aggregation level of result data (case sensitive).  For	list of supported values see [Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reportaggregation(v=msads.90).aspx#Values)	. *DEFAULT:* `Daily` (lowest supported) 
     - **incremental**	– *(OPT)* upload incrementally. *DEFAULT*: FALSE 
-    - **columns**	– *(OPT)* list of supported columns according to report type. Please note that some columns are required and some column combinations are not allowed, depending on the report type.
+    - **columns**	– *(OPT)* list of supported columns according to report type. **Please note that some columns are required and some column combinations are not allowed, depending on the report type.** [See more](https://docs.microsoft.com/en-us/advertising/guides/reports?view=bingads-13#columnrestrictions)
 		 
 
 ## Reports
