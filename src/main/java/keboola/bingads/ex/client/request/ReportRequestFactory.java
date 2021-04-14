@@ -19,8 +19,8 @@ import keboola.bingads.ex.config.pojos.BReportRequest.ReportType;
 @SuppressWarnings("rawtypes")
 public class ReportRequestFactory {
 
-	public static ReportRequest buildFromConfig(List<Long> accIds, BReportRequest reportReqParams, Calendar lastSync)
-			throws Exception {
+	public static ReportRequest buildFromConfig(List<Long> accIds, BReportRequest reportReqParams,
+			Calendar lastSync) throws Exception {
 		RequestBuilderProcessor builder = getBuilderByType(reportReqParams.getType());
 		if (reportReqParams.getColumns() != null && reportReqParams.getColumns().length != 0) {
 			builder.setCustomColumns(Arrays.asList(reportReqParams.getColumns()));
@@ -47,16 +47,16 @@ public class ReportRequestFactory {
 		if (request.getReportPeriod() == null) {
 			if (lastSync == null) {
 				startDate.setDay(request.getStartDay());
-				startDate.setMonth(request.getStartMonth()+1);
+				startDate.setMonth(request.getStartMonth() + 1);
 				startDate.setYear(request.getStartYear());
 			} else {
 				startDate.setDay(lastSync.get(Calendar.DAY_OF_MONTH));
-				startDate.setMonth(lastSync.get(Calendar.MONTH)+1);
+				startDate.setMonth(lastSync.get(Calendar.MONTH) + 1);
 				startDate.setYear(lastSync.get(Calendar.YEAR));
 			}
 
 			endDate.setDay(curr.get(Calendar.DAY_OF_MONTH));
-			endDate.setMonth(curr.get(Calendar.MONTH)+1);
+			endDate.setMonth(curr.get(Calendar.MONTH) + 1);
 			endDate.setYear(curr.get(Calendar.YEAR));
 
 			time.setCustomDateRangeStart(startDate);
@@ -82,7 +82,9 @@ public class ReportRequestFactory {
 			return new KeywordPerformanceReportProccessor();
 		case ShareOfVoice:
 			return new ShareOfVoiceReportProccessor();
-			
+		case CampaignPerformance:
+			return new CampaignReportProccessor();
+
 		default:
 			throw new IllegalArgumentException("Unsupported report type " + type.name());
 		}

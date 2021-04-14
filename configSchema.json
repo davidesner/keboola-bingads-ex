@@ -1,232 +1,1416 @@
 {
-  "type": "object",
-  "title": "BingAds extractor configuration",
-  "required": [
-    "#devKey",
-    "customerId",
-    "accountId",
-    "bucket",
-    "sinceLast",
-    "bulkRequests",
-    "reportRequests"
-  ],
-  "properties": {
-    "bucket": {
-      "type": "string",
-      "title": "Storage bucket",
-      "description": "Storage bucket where the result will be uploaded. (i.e. in.c-bing-ex)"
-    },
-    "#devKey": {
-      "type": "string",
-      "title": "Developer Token",
-      "description": "Your developer token"
-    },
-    "accountId": {
-      "type": "string",
-      "title": "Account ID",
-      "description": "Account identifier."
-    },
-    "sinceLast": {
-      "type": "boolean",
-      "default": true,
-      "description": "Continue download from last state (retrieves data since last download was perfomed)"
-    },
-    "customerId": {
-      "type": "string",
-      "title": "Customer ID",
-      "description": "Customer identifier of your BingAds account."
-    },
-    "bulkRequests": {
-      "type": "object",
-      "title": "Bulk Request Objects",
-      "format": "table",
-      "required": [
-        "ads",
-        "adGroups",
-        "campaigns",
-        "keywords",
-        "campQualityScore",
-        "siteLinkAddExtensions"
-      ],
-      "properties": {
-        "ads": {
-          "type": "boolean",
-          "title": "Ads",
-          "format": "checkbox",
-          "default": true
+    "type": "object",
+    "title": "BingAds extractor configuration",
+    "required": [
+        "#devKey",
+        "customerId",
+        "accountId",
+        "bucket",
+        "sinceLast",
+        "bulkRequests",
+        "reportRequests"
+    ],
+    "properties": {
+        "bucket": {
+            "type": "string",
+            "title": "Storage bucket",
+            "description": "Storage bucket where the result will be uploaded. (i.e. in.c-bing-ex)"
         },
-        "adGroups": {
-          "type": "boolean",
-          "title": "Ad Groups",
-          "format": "checkbox",
-          "default": true
+        "#devKey": {
+            "type": "string",
+            "title": "Developer Token",
+            "description": "Your developer token"
         },
-        "keywords": {
-          "type": "boolean",
-          "title": "Keywords",
-          "format": "checkbox",
-          "default": true
+        "accountId": {
+            "type": "string",
+            "title": "Account ID",
+            "description": "Account identifier. (if left empty, all accounts are downloaded)"
         },
-        "campaigns": {
-          "type": "boolean",
-          "title": "Campaigns",
-          "format": "checkbox",
-          "default": true
+        "sinceLast": {
+            "type": "boolean",
+            "default": true,
+            "description": "Continue download from last state (retrieves data since last download was perfomed)"
         },
-        "campQualityScore": {
-          "type": "boolean",
-          "title": "Campaign Quality Score",
-          "format": "checkbox",
-          "default": true
+        "customerId": {
+            "type": "string",
+            "title": "Customer ID",
+            "description": "Customer identifier of your BingAds account.",
+            "minLength": 2
         },
-        "siteLinkAddExtensions": {
-          "type": "boolean",
-          "title": "Site Link Add-Extensions",
-          "format": "checkbox",
-          "default": true
-        }
-      },
-      "description": "List of datasets to retrieve from Bulk Service",
-      "uniqueItems": true
-    },
-    "reportRequests": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "title": "Report",
-        "required": [
-          "type",
-          "incremental",
-          "pkey",
-          "startDate",
-          "reportPeriod",
-          "aggregationPeriod",
-          "columns",
-          "completeData"
-        ],
-        "properties": {
-          "pkey": {
+        "bulkRequests": {
+            "type": "object",
+            "title": "Bulk Request Objects",
+            "format": "table",
+            "required": [
+                "ads",
+                "adGroups",
+                "campaigns",
+                "keywords",
+                "campQualityScore",
+                "siteLinkAddExtensions"
+            ],
+            "properties": {
+                "ads": {
+                    "type": "boolean",
+                    "title": "Ads",
+                    "format": "checkbox",
+                    "default": true
+                },
+                "adGroups": {
+                    "type": "boolean",
+                    "title": "Ad Groups",
+                    "format": "checkbox",
+                    "default": true
+                },
+                "keywords": {
+                    "type": "boolean",
+                    "title": "Keywords",
+                    "format": "checkbox",
+                    "default": true
+                },
+                "campaigns": {
+                    "type": "boolean",
+                    "title": "Campaigns",
+                    "format": "checkbox",
+                    "default": true
+                },
+                "campQualityScore": {
+                    "type": "boolean",
+                    "title": "Campaign Quality Score",
+                    "format": "checkbox",
+                    "default": true
+                },
+                "siteLinkAddExtensions": {
+                    "type": "boolean",
+                    "title": "Site Link Add-Extensions",
+                    "format": "checkbox",
+                    "default": true
+                }
+            },
+            "description": "List of datasets to retrieve from Bulk Service",
+            "uniqueItems": true
+        },
+        "reportRequests": {
             "type": "array",
             "items": {
-              "type": "string",
-              "title": "Pkey"
+                "type": "object",
+                "title": "Report",
+                "required": [
+                    "type"
+                ],
+                "properties": {
+                    "type": {
+                        "title": "Endpoint",
+                        "description": "Fetch data from given date range. i.e. Products, Customers, Orders",
+                        "anyOf": [{
+                                "title": "AdsPerformance",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "AdsPerformance"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "AdGroupName",
+                                                "AdId",
+                                                "AdGroupId",
+                                                "AdTitle",
+                                                "AdDescription",
+                                                "AdDescription2",
+                                                "AdType",
+                                                "CurrencyCode",
+                                                "AdDistribution",
+                                                "Impressions",
+                                                "Clicks",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "Spend",
+                                                "AveragePosition",
+                                                "Conversions",
+                                                "ConversionRate",
+                                                "CostPerConversion",
+                                                "DestinationUrl",
+                                                "DeviceType",
+                                                "Language",
+                                                "DisplayUrl",
+                                                "AdStatus",
+                                                "Network",
+                                                "TopVsOther",
+                                                "BidMatchType",
+                                                "DeliveredMatchType",
+                                                "DeviceOS",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "TrackingTemplate",
+                                                "CustomParameters",
+                                                "FinalUrl",
+                                                "FinalMobileUrl",
+                                                "FinalAppUrl",
+                                                "AccountStatus",
+                                                "CampaignStatus",
+                                                "AdGroupStatus",
+                                                "TitlePart1",
+                                                "TitlePart2",
+                                                "TitlePart3",
+                                                "Headline",
+                                                "LongHeadline",
+                                                "BusinessName",
+                                                "Path1",
+                                                "Path2",
+                                                "AdLabels",
+                                                "CustomerId",
+                                                "CustomerName",
+                                                "CampaignType",
+                                                "BaseCampaignId",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "FinalUrlSuffix",
+                                                "ViewThroughConversions",
+                                                "Goal",
+                                                "GoalType",
+                                                "AbsoluteTopImpressionRatePercent",
+                                                "TopImpressionRatePercent",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "KeywordPerformance",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "KeywordPerformance"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "AdGroupName",
+                                                "AdGroupId",
+                                                "Keyword",
+                                                "KeywordId",
+                                                "AdId",
+                                                "AdType",
+                                                "DestinationUrl",
+                                                "CurrentMaxCpc",
+                                                "CurrencyCode",
+                                                "DeliveredMatchType",
+                                                "AdDistribution",
+                                                "Impressions",
+                                                "Clicks",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "Spend",
+                                                "AveragePosition",
+                                                "Conversions",
+                                                "ConversionRate",
+                                                "CostPerConversion",
+                                                "BidMatchType",
+                                                "DeviceType",
+                                                "QualityScore",
+                                                "ExpectedCtr",
+                                                "AdRelevance",
+                                                "LandingPageExperience",
+                                                "Language",
+                                                "HistoricalQualityScore",
+                                                "HistoricalExpectedCtr",
+                                                "HistoricalAdRelevance",
+                                                "HistoricalLandingPageExperience",
+                                                "QualityImpact",
+                                                "CampaignStatus",
+                                                "AccountStatus",
+                                                "AdGroupStatus",
+                                                "KeywordStatus",
+                                                "Network",
+                                                "TopVsOther",
+                                                "DeviceOS",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "TrackingTemplate",
+                                                "CustomParameters",
+                                                "FinalUrl",
+                                                "FinalMobileUrl",
+                                                "FinalAppUrl",
+                                                "BidStrategyType",
+                                                "KeywordLabels",
+                                                "Mainline1Bid",
+                                                "MainlineBid",
+                                                "FirstPageBid",
+                                                "FinalUrlSuffix",
+                                                "BaseCampaignId",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "ViewThroughConversions",
+                                                "Goal",
+                                                "GoalType",
+                                                "AbsoluteTopImpressionRatePercent",
+                                                "TopImpressionRatePercent",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "CampaignPerformance",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "CampaignPerformance"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "TimePeriod",
+                                                "CampaignStatus",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "CurrencyCode",
+                                                "AdDistribution",
+                                                "Impressions",
+                                                "Clicks",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "Spend",
+                                                "AveragePosition",
+                                                "Conversions",
+                                                "ConversionRate",
+                                                "CostPerConversion",
+                                                "LowQualityClicks",
+                                                "LowQualityClicksPercent",
+                                                "LowQualityImpressions",
+                                                "LowQualityImpressionsPercent",
+                                                "LowQualityConversions",
+                                                "LowQualityConversionRate",
+                                                "DeviceType",
+                                                "DeviceOS",
+                                                "ImpressionSharePercent",
+                                                "ImpressionLostToBudgetPercent",
+                                                "ImpressionLostToRankAggPercent",
+                                                "QualityScore",
+                                                "ExpectedCtr",
+                                                "AdRelevance",
+                                                "LandingPageExperience",
+                                                "HistoricalQualityScore",
+                                                "HistoricalExpectedCtr",
+                                                "HistoricalAdRelevance",
+                                                "HistoricalLandingPageExperience",
+                                                "PhoneImpressions",
+                                                "PhoneCalls",
+                                                "Ptr",
+                                                "Network",
+                                                "TopVsOther",
+                                                "BidMatchType",
+                                                "DeliveredMatchType",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "TrackingTemplate",
+                                                "CustomParameters",
+                                                "AccountStatus",
+                                                "BudgetName",
+                                                "BudgetStatus",
+                                                "BudgetAssociationStatus",
+                                                "LowQualityGeneralClicks",
+                                                "LowQualitySophisticatedClicks",
+                                                "CampaignLabels",
+                                                "ExactMatchImpressionSharePercent",
+                                                "CustomerId",
+                                                "CustomerName",
+                                                "ClickSharePercent",
+                                                "AbsoluteTopImpressionSharePercent",
+                                                "FinalUrlSuffix",
+                                                "CampaignType",
+                                                "TopImpressionShareLostToRankPercent",
+                                                "TopImpressionShareLostToBudgetPercent",
+                                                "AbsoluteTopImpressionShareLostToRankPercent",
+                                                "AbsoluteTopImpressionShareLostToBudgetPercent",
+                                                "TopImpressionSharePercent",
+                                                "AbsoluteTopImpressionRatePercent",
+                                                "TopImpressionRatePercent",
+                                                "BaseCampaignId",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "ViewThroughConversions",
+                                                "Goal",
+                                                "GoalType",
+                                                "AudienceImpressionSharePercent",
+                                                "AudienceImpressionLostToRankPercent",
+                                                "AudienceImpressionLostToBudgetPercent",
+                                                "RelativeCtr",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "AdExtensionDetail",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "AdExtensionDetail"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "AccountId",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "AdGroupName",
+                                                "AdGroupId",
+                                                "AdTitle",
+                                                "AdId",
+                                                "AdExtensionType",
+                                                "AdExtensionTypeId",
+                                                "AdExtensionId",
+                                                "AdExtensionVersion",
+                                                "AdExtensionPropertyValue",
+                                                "Impressions",
+                                                "DeviceType",
+                                                "DeviceOS",
+                                                "Clicks",
+                                                "Ctr",
+                                                "Conversions",
+                                                "CostPerConversion",
+                                                "ConversionRate",
+                                                "Spend",
+                                                "AverageCpc",
+                                                "BidMatchType",
+                                                "DeliveredMatchType",
+                                                "Network",
+                                                "TopVsOther",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "AccountStatus",
+                                                "CampaignStatus",
+                                                "AdGroupStatus",
+                                                "AdStatus",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "Goal",
+                                                "GoalType",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "AdExtensionByKeyWord",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "AdExtensionByKeyWord"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "AdGroupName",
+                                                "AdGroupId",
+                                                "Keyword",
+                                                "KeywordId",
+                                                "AdExtensionType",
+                                                "DeviceType",
+                                                "DeviceOS",
+                                                "ClickType",
+                                                "Impressions",
+                                                "Clicks",
+                                                "TotalClicks",
+                                                "Conversions",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "ConversionRate",
+                                                "Spend",
+                                                "AdExtensionId",
+                                                "AdExtensionVersion",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "BidMatchType",
+                                                "DeliveredMatchType",
+                                                "Network",
+                                                "TopVsOther",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerConversion",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "AccountStatus",
+                                                "CampaignStatus",
+                                                "AdGroupStatus",
+                                                "KeywordStatus",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "Goal",
+                                                "GoalType",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "AdExtensionByAd",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "AdExtensionByAd"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "CampaignId",
+                                                "AdGroupName",
+                                                "AdGroupId",
+                                                "AdTitle",
+                                                "AdId",
+                                                "AdExtensionType",
+                                                "DeviceType",
+                                                "DeviceOS",
+                                                "ClickType",
+                                                "Impressions",
+                                                "Clicks",
+                                                "TotalClicks",
+                                                "Conversions",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "ConversionRate",
+                                                "Spend",
+                                                "AdExtensionId",
+                                                "AdExtensionVersion",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "BidMatchType",
+                                                "DeliveredMatchType",
+                                                "Network",
+                                                "TopVsOther",
+                                                "Assists",
+                                                "Revenue",
+                                                "ReturnOnAdSpend",
+                                                "CostPerConversion",
+                                                "CostPerAssist",
+                                                "RevenuePerConversion",
+                                                "RevenuePerAssist",
+                                                "AccountStatus",
+                                                "CampaignStatus",
+                                                "AdGroupStatus",
+                                                "AdStatus",
+                                                "TitlePart1",
+                                                "TitlePart2",
+                                                "TitlePart3",
+                                                "AllConversions",
+                                                "AllRevenue",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "AllReturnOnAdSpend",
+                                                "AllRevenuePerConversion",
+                                                "Goal",
+                                                "GoalType",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }, {
+                                "title": "ShareOfVoice",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "pkey": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "title": "Pkey"
+                                        },
+                                        "title": "Pkeys",
+                                        "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 3000
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "ShareOfVoice"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report query",
+                                        "propertyOrder": 1000,
+                                        "options": {
+                                            "hidden": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "AccountName",
+                                                "TimePeriod",
+                                                "CampaignName",
+                                                "AdGroupName",
+                                                "Keyword",
+                                                "DeliveredMatchType",
+                                                "BidMatchType",
+                                                "Language",
+                                                "AccountNumber",
+                                                "AccountId",
+                                                "KeywordId",
+                                                "AdGroupId",
+                                                "CampaignId",
+                                                "Impressions",
+                                                "Clicks",
+                                                "Ctr",
+                                                "AverageCpc",
+                                                "Spend",
+                                                "AveragePosition",
+                                                "ImpressionSharePercent",
+                                                "ImpressionLostToBudgetPercent",
+                                                "ImpressionLostToRankAggPercent",
+                                                "CurrentMaxCpc",
+                                                "QualityScore",
+                                                "ExpectedCtr",
+                                                "AdRelevance",
+                                                "LandingPageExperience",
+                                                "Conversions",
+                                                "ConversionRate",
+                                                "CostPerConversion",
+                                                "AdDistribution",
+                                                "ClickSharePercent",
+                                                "DeviceType",
+                                                "Network",
+                                                "AccountStatus",
+                                                "CampaignStatus",
+                                                "AdGroupStatus",
+                                                "KeywordStatus",
+                                                "BidStrategyType",
+                                                "KeywordLabels",
+                                                "ExactMatchImpressionSharePercent",
+                                                "TopImpressionShareLostToRankPercent",
+                                                "TopImpressionShareLostToBudgetPercent",
+                                                "AbsoluteTopImpressionShareLostToRankPercent",
+                                                "AbsoluteTopImpressionShareLostToBudgetPercent",
+                                                "AbsoluteTopImpressionSharePercent",
+                                                "TopImpressionSharePercent",
+                                                "AbsoluteTopImpressionRatePercent",
+                                                "TopImpressionRatePercent",
+                                                "BaseCampaignId",
+                                                "AllConversions",
+                                                "AllConversionRate",
+                                                "AllCostPerConversion",
+                                                "ViewThroughConversions",
+                                                "Goal",
+                                                "GoalType",
+                                                "AverageCpm"
+                                            ]
+                                        },
+                                        "title": "Columns",
+                                        "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
+                                        "uniqueItems": true,
+                                        "propertyOrder": 7000,
+                                        "format": "select"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "title": "Start Date",
+                                        "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
+                                        "propertyOrder": 4000
+                                    },
+                                    "incremental": {
+                                        "enum": [
+                                            false,
+                                            true
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Storage upload mode",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Full",
+                                                "Incremental"
+                                            ]
+                                        },
+                                        "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+                                        "propertyOrder": 2000
+                                    },
+                                    "completeData": {
+                                        "enum": [
+                                            true,
+                                            false
+                                        ],
+                                        "type": "boolean",
+                                        "title": "Return complete data only",
+                                        "default": false,
+                                        "options": {
+                                            "enum_titles": [
+                                                "Yes",
+                                                "No"
+                                            ]
+                                        },
+                                        "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
+                                        "propertyOrder": 1000
+                                    },
+                                    "reportPeriod": {
+                                        "enum": [
+                                            "CustomStartDate",
+                                            "LastFourWeeks",
+                                            "LastMonth",
+                                            "LastSevenDays",
+                                            "LastSixMonths",
+                                            "LastThreeMonths",
+                                            "LastWeek",
+                                            "LastYear",
+                                            "ThisMonth",
+                                            "ThisWeek",
+                                            "ThisYear",
+                                            "Today",
+                                            "Yesterday"
+                                        ],
+                                        "type": "string",
+                                        "title": "Report Period",
+                                        "default": "CustomStartDate",
+                                        "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
+                                        "propertyOrder": 5000
+                                    },
+                                    "aggregationPeriod": {
+                                        "enum": [
+                                            "Daily",
+                                            "DayOfWeek",
+                                            "Hourly",
+                                            "HourOfDay",
+                                            "Monthly",
+                                            "Summary",
+                                            "Weekly",
+                                            "Yearly"
+                                        ],
+                                        "type": "string",
+                                        "title": "Aggregation Period",
+                                        "default": "Daily",
+                                        "description": "Aggregation level of result data",
+                                        "propertyOrder": 6000
+                                    }
+                                },
+                                "type": "object",
+                                "options": {
+                                    "keep_oneof_values": false
+                                }
+                            }
+                        ]
+                    }
+                }
             },
-            "title": "Pkeys",
-            "description": "Names of primary key columns. (Specify if load mode is set to Incremental)",
-            "uniqueItems": true,
-            "propertyOrder": 3000
-          },
-          "type": {
-            "enum": [
-              "AdsPerformance",
-              "KeywordPerformance",
-              "AdExtensionDetail",
-              "AdExtensionByKeyWord",
-              "AdExtensionByAd",
-              "ShareOfVoice"
-            ],
-            "type": "string",
-            "title": "Report query",
-            "propertyOrder": 1000
-          },
-          "columns": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "type": "string",
-              "title": "Column"
-            },
-            "title": "Columns",
-            "description": "List of supported columns according to report type. Leave empty to fetch all available columns.",
-            "uniqueItems": true,
-            "propertyOrder": 7000
-          },
-          "startDate": {
-            "type": "string",
-            "title": "Start Date",
-            "description": "Date from which to retrieve data in format: dd-mm-yyyy. If sinceLast is set, this boundary is considered only the first time extractor runs.",
-            "propertyOrder": 4000
-          },
-          "incremental": {
-            "enum": [
-              false,
-              true
-            ],
-            "type": "boolean",
-            "title": "Storage upload mode",
-            "default": false,
-            "options": {
-              "enum_titles": [
-                "Full",
-                "Incremental"
-              ]
-            },
-            "description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
-            "propertyOrder": 2000
-          },
-          "completeData": {
-            "enum": [
-              true,
-              false
-            ],
-            "type": "boolean",
-            "title": "Return complete data only",
-            "default": false,
-            "options": {
-              "enum_titles": [
-                "Yes",
-                "No"
-              ]
-            },
-            "description": "Determines whether you want the service to generate the report only if all the data has been processed and is available. If true, the request fails if the system has not finished processing all the data based on the aggregation, scope, and time period values that you specify.",
-            "propertyOrder": 1000
-          },
-          "reportPeriod": {
-            "enum": [
-              "CustomStartDate",
-              "LastFourWeeks",
-              "LastMonth",
-              "LastSevenDays",
-              "LastSixMonths",
-              "LastThreeMonths",
-              "LastWeek",
-              "LastYear",
-              "ThisMonth",
-              "ThisWeek",
-              "ThisYear",
-              "Today",
-              "Yesterday"
-            ],
-            "type": "string",
-            "title": "Report Period",
-            "default": "CustomStartDate",
-            "description": "(optional) Time period of report data. (Overrides the 'Start Date' parameter) NOTE: If you are reporting on multiple accounts the timezone considered may differ from what you expect see documentation",
-            "propertyOrder": 5000
-          },
-          "aggregationPeriod": {
-            "enum": [
-              "Daily",
-              "DayOfWeek",
-              "Hourly",
-              "HourOfDay",
-              "Monthly",
-              "Summary",
-              "Weekly",
-              "Yearly"
-            ],
-            "type": "string",
-            "title": "Aggregation Period",
-            "default": "Daily",
-            "description": "Aggregation level of result data",
-            "propertyOrder": 6000
-          }
+            "title": "Performance data datasets",
+            "description": "List of datasets retrieved from Reporting Service",
+            "uniqueItems": true
         }
-      },
-      "title": "Performance data datasets",
-      "description": "List of datasets retrieved from Reporting Service",
-      "uniqueItems": true
     }
-  }
 }

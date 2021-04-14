@@ -20,10 +20,12 @@ specified level of aggregation. Currently supported datasets and their column li
 
 - **AdsPerformance**	*[[AdPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adperformancereportcolumn(v=msads.90).aspx)]*
 - **KeywordPerformance**	 *[[KeywordPerformanceReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-keywordperformancereportcolumn(v=msads.90).aspx)]*
+- **CampaignPerformance**	 *[[CampaignPerformanceColumns](https://docs.microsoft.com/en-us/advertising/reporting-service/campaignperformancereportcolumn)]*
 - **AdExtensionDetail**	*[[AdExtensionDetailReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensiondetailreportcolumn(v=msads.90).aspx)]*
 - **AdExtensionByKeyWord**	*[[AdExtensionByKeywordReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbykeywordreportcolumn(v=msads.90).aspx)]* 
 - **AdExtensionByAd**	*[[AdExtensionByAdReportColumns](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-adextensionbyadreportcolumn(v=msads.90).aspx)]*
 - **ShareOfVoice**	*[[ShareOfVoiceReportColumns](https://docs.microsoft.com/en-us/advertising/reporting-service/shareofvoicereportcolumn?view=bingads-13)]*
+
 
 For each report user can specify aggregation level, report period and column set to be retrieved. By default the aggregation level is *DAILY* and all columns are retrieved.
 
@@ -61,10 +63,20 @@ Then you can authorize with your Microsoft account to retrieve Refresh tokens. T
     - **reportPeriod**– *(OPT)* time period of report data (case sensitive). For list of	supported values see	[Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reporttimeperiod.aspx#Values)  ***NOTE:*** If this parameter is set startDate parameter is ignored. If you are reporting on multiple accounts the timezone considered may differ from what you expect see [Values](https://docs.microsoft.com/en-us/bingads/guides/reports#aggregation-time#Values)
     - **aggregationPeriod**	– *(OPT)* aggregation level of result data (case sensitive).  For	list of supported values see [Values](https://msdn.microsoft.com/en-us/library/bing-ads-reporting-reportaggregation(v=msads.90).aspx#Values)	. *DEFAULT:* `Daily` (lowest supported) 
     - **incremental**	– *(OPT)* upload incrementally. *DEFAULT*: FALSE 
-    - **columns**	– *(OPT)* list of supported columns according to report type. Please note that some columns are required and some column combinations are not allowed, depending on the report type.
+    - **columns**	– *(OPT)* list of supported columns according to report type. **Please note that some columns are required and some column combinations are not allowed, depending on the report type.** [See more](https://docs.microsoft.com/en-us/advertising/guides/reports?view=bingads-13#columnrestrictions)
 		 
 
-### Sample configurations / use cases
+## Reports
+
+### CampaignPerformance Reports
+
+**Column limitation**
+
+If you include any of the AudienceImpressionLostToBudgetPercent, AudienceImpressionLostToRankPercent, AudienceImpressionSharePercent, or RelativeCtr columns, then you must exclude the CustomerId, CustomerName, and DeliveredMatchType attribute columns, and vice versa.
+
+**NOTE** By default the CustomerId, CustomerName, and DeliveredMatchType are excluded if not specified otherwise in the explicit column list.
+
+## Sample configurations / use cases
 
 #### Use case 1
 
