@@ -1,7 +1,7 @@
 name: PushToTest
 on: push
 jobs:
-  deploy:
+  pushtotest:
     runs-on: ubuntu-latest
     env:
       APP_IMAGE: keboola-component
