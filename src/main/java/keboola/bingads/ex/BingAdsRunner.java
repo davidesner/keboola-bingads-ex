@@ -70,6 +70,9 @@ public class BingAdsRunner extends ComponentRunner {
 			results.addAll(getAndStoreAccounts());
 		} catch (Exception e) {
 			log.error("Failed to download accounts table!" + e.getMessage(), e);
+			this.accInfoWriter.close();
+			new File(handler.getOutputTablesPath() + File.separator
+					+ this.accInfoWriter.getFileName()).delete();
 		}
 
 		Map<String, Boolean> bulkReqestsToDownload = config.getBulkRequests().getBulkFiles();
