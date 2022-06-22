@@ -22,133 +22,144 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
- *
  * @author David Esner <esnerda at gmail.com>
  * @created 2016
  */
 public class CsvUtils {
-	/**
-	 * Removes first line from the specified file. Using NIO - fast.
-	 * 
-	 * @param csvFile
-	 * @throws IOException
-	 */
-	public static void removeHeaderFromCsv(File csvFile) throws Exception {
-		File outFile = new File(csvFile.getParent() + File.separator + "tempRes");
-		try (
-				FileReader fr = new FileReader(csvFile);
-				BufferedReader br = new BufferedReader(fr);
-				FileWriter fileStream = new FileWriter(outFile);
-				BufferedWriter out = new BufferedWriter(fileStream);
-			) {
-			String line;
-			br.readLine();
-			while ((line = br.readLine()) != null) {
-				out.write(line);
-				out.newLine();
-			}
-		}
+    public static final String UTF8_BOM = "\uFEFF";
 
-		csvFile.delete();
-		outFile.renameTo(csvFile);
-	}
+    /**
+     * Removes first line from the specified file. Using NIO - fast.
+     *
+     * @param csvFile
+     * @throws IOException
+     */
+    public static void removeHeaderFromCsv(File csvFile) throws Exception {
+        File outFile = new File(csvFile.getParent() + File.separator + "tempRes");
+        try (
+                FileReader fr = new FileReader(csvFile);
+                BufferedReader br = new BufferedReader(fr);
+                FileWriter fileStream = new FileWriter(outFile);
+                BufferedWriter out = new BufferedWriter(fileStream);
+        ) {
+            String line;
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                out.write(line);
+                out.newLine();
+            }
+        }
 
-	private static final boolean isNL(int character) {
-		if ((character == -1)) {
-			return false;
-		}
-		return ((((char) character == '\n') || ((char) character == '\r')));
-	}
+        csvFile.delete();
+        outFile.renameTo(csvFile);
+    }
 
-	public static void deleteEmptyDirectories(File directory) {
-		File[] subDirs = directory.listFiles(File::isDirectory);
-		for (File f : subDirs) {
-			try {
-				if (isDirEmpty(f)) {
-					f.delete();
-				}
-			} catch (IOException e) {
-				// do nothing, I really dont care here
-			}
-		}
-	}
+    private static final boolean isNL(int character) {
+        if ((character == -1)) {
+            return false;
+        }
+        return ((((char) character == '\n') || ((char) character == '\r')));
+    }
 
-	public static void deleteEmptyFiles(List<File> files) {
-		for (File f : files) {
-			try {
-				if (isFileEmpty(f)) {
-					f.delete();
-				}
-			} catch (IOException e) {
-				// do nothing, I really dont care here
-			}
-		}
-	}
+    public static void deleteEmptyDirectories(File directory) {
+        File[] subDirs = directory.listFiles(File::isDirectory);
+        for (File f : subDirs) {
+            try {
+                if (isDirEmpty(f)) {
+                    f.delete();
+                }
+            } catch (IOException e) {
+                // do nothing, I really dont care here
+            }
+        }
+    }
 
-	public static boolean isFileEmpty(File f) throws IOException {
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(f));
-			String line = br.readLine();
-			return StringUtils.isBlank(line);
-		} finally {
-			if (br != null)
-				br.close();
-		}
-	}
+    public static void deleteEmptyFiles(List<File> files) {
+        for (File f : files) {
+            try {
+                if (isFileEmpty(f)) {
+                    f.delete();
+                }
+            } catch (IOException e) {
+                // do nothing, I really dont care here
+            }
+        }
+    }
 
-	public static boolean isDirEmpty(File f) throws IOException {
-		return f.listFiles().length == 0;
-	}
+    public static boolean isFileEmpty(File f) throws IOException {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(f));
+            String line = br.readLine();
+            return StringUtils.isBlank(line);
+        } finally {
+            if (br != null)
+                br.close();
+        }
+    }
 
-	private static char[] readLineWithNL(FileInputStream in) throws IOException {
-		try {
-			int hLen = 0;
+    public static boolean isDirEmpty(File f) throws IOException {
+        return f.listFiles().length == 0;
+    }
 
-			ArrayList<Character> chars = new ArrayList();
-			int ch = in.read();
-			chars.add((char) ch);
-			while (!isNL(ch)) {
-				ch = in.read();
-				chars.add((char) ch);
-			}
-			boolean isNl = true;
-			while (isNl) {
-				ch = in.read();
-				if (isNL(ch)) {
-					chars.add((char) ch);
-					isNl = true;
-				} else {
-					isNl = false;
-				}
-				hLen++;
-			}
-			char[] charArray = new char[chars.size()];
-			for (int i = 0; i < chars.size(); i++) {
-				charArray[i] = chars.get(i);
-			}
-			return charArray;
-		} catch (IOException ex) {
-			throw ex;
-		}
-	}
+    private static char[] readLineWithNL(FileInputStream in) throws IOException {
+        try {
+            int hLen = 0;
 
-	public static String[] readHeader(File csvFile, char separator, char quotechar, char escape, boolean strictQuotes,
-			boolean ignoreLeadingWhiteSpace) throws Exception {
-		String[] headers = null;
-		try (FileReader freader = new FileReader(csvFile);
-				CSVReader csvreader = new CSVReader(freader, separator, quotechar, escape, 0, strictQuotes,
-						ignoreLeadingWhiteSpace);) {
+            ArrayList<Character> chars = new ArrayList();
+            int ch = in.read();
+            chars.add((char) ch);
+            while (!isNL(ch)) {
+                ch = in.read();
+                chars.add((char) ch);
+            }
+            boolean isNl = true;
+            while (isNl) {
+                ch = in.read();
+                if (isNL(ch)) {
+                    chars.add((char) ch);
+                    isNl = true;
+                } else {
+                    isNl = false;
+                }
+                hLen++;
+            }
+            char[] charArray = new char[chars.size()];
+            for (int i = 0; i < chars.size(); i++) {
+                charArray[i] = chars.get(i);
+            }
+            return charArray;
+        } catch (IOException ex) {
+            throw ex;
+        }
+    }
 
-			headers = csvreader.readNext();
-			if (headers == null) {
-				throw new Exception("Error reading csv file header: " + csvFile.getName());
-			}
-		} catch (Exception e) {
-			throw e;
-		}
-		return headers;
-	}
+    public static String[] readHeader(File csvFile, char separator, char quotechar, char escape, boolean strictQuotes,
+                                      boolean ignoreLeadingWhiteSpace) throws Exception {
+        String[] headers = null;
+        try (FileReader freader = new FileReader(csvFile);
+             CSVReader csvreader = new CSVReader(freader, separator, quotechar, escape, 0, strictQuotes,
+                     ignoreLeadingWhiteSpace);) {
+
+            headers = csvreader.readNext();
+            if (headers == null) {
+                throw new Exception("Error reading csv file header: " + csvFile.getName());
+            }
+            // remove UTF8 BOM that started to appear in the response.
+            headers[0] = removeUTF8BOM(headers[0]);
+        } catch (Exception e) {
+            throw e;
+        }
+        return headers;
+    }
+
+
+    private static String removeUTF8BOM(String s) {
+        if (s.startsWith(UTF8_BOM)) {
+            s = s.substring(1);
+        }
+        return s;
+    }
 
     /**
      * Validates the structure of the merged csv files.
@@ -159,9 +170,9 @@ public class CsvUtils {
      * @throws Exception
      */
     public static boolean dataStructureMatch(Collection<String> fileNames, String folderPath) throws Exception {
-    	if (fileNames == null || fileNames.isEmpty()) {
-    		return true;
-    	}
+        if (fileNames == null || fileNames.isEmpty()) {
+            return true;
+        }
         String[] headers = null;
         String headerLine = "";
         String currFile = "";
