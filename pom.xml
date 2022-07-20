@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>com.microsoft.bingads</groupId>
 			<artifactId>microsoft.bingads</artifactId>
-			<version>12.13.5</version>
+			<version>13.0.14</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
