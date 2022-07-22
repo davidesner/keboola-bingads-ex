@@ -1,0 +1,33 @@
+version: "2"
+services:
+  # for development purposes
+  dev:
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    environment:
+      - KBC_DATADIR=./data
+
+    mem_limit: 256m
+  test:
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    environment:
+      - KBC_DATADIR=./data
+    command:
+      - /bin/sh
+      - build_n_test.sh
+  bash:
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    environment:
+      - KBC_DATADIR=./data
+
+    command:
+      - /bin/sh
+      - build_n_test.sh
